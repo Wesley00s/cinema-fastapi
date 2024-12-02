@@ -25,6 +25,13 @@ class CustomerService:
             return {"customer": response}
         raise HTTPException(status_code=404, detail="Customer not found")
 
+    @app.get("/customer")
+    async def get_all(self):
+        response = self.customer_repository.get_all()
+        if response:
+            return response
+        raise HTTPException(status_code=404, detail="An error occurred to fetch the data")
+
     @app.put("/customer/{id}")
     async def update(self, id: int, customer: Customer):
         response = self.customer_repository.update(id, customer)

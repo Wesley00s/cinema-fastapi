@@ -3,8 +3,7 @@ from pydantic import BaseModel
 
 
 class Room(BaseModel):
-     id: int
-     number: int
-     capacity: int
-     created_at: datetime
-     updated_at: datetime
+     number: int | None = None
+     capacity: int | None = None
+     create_at: datetime | None = None
+     update_at: datetime | None = None

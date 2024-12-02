@@ -36,7 +36,7 @@ class CustomerRepository:
             db.close()
 
     @staticmethod
-    def update(id: int, customer: Customer) -> Optional[Customer]:
+    def update(id: int, customer: Customer) -> bool:
         db = Connection()
         try:
             db.connect()
@@ -108,7 +108,6 @@ class CustomerRepository:
             db.connection.rollback()
             print(f"Error updating customer with id {id}: {e}")
             return False
-
         finally:
             db.close()
 
@@ -130,6 +129,28 @@ class CustomerRepository:
             return None
 
     @staticmethod
+    def get_all() -> Optional[list[Dict]]:
+        db = Connection()
+        try:
+            db.connect()
+            cursor = db.get_cursor()
+            if cursor:
+                sql = """
+                SELECT * FROM customer
+                """
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                columns = [desc[0] for desc in cursor.description]
+                result = [dict(zip(columns, row)) for row in rows]
+                return result
+        except Exception as e:
+            db.connection.rollback()
+            print(f'An exception occurred to get all customers, {e}')
+            return None
+        finally:
+            db.close()
+
+    @staticmethod
     def delete(id: int) -> bool:
         db = Connection()
         try:
@@ -146,7 +167,7 @@ class CustomerRepository:
 
         except Exception as e:
             db.connection.rollback()
-            print(f'An exception occurred to delete user by id')
+            print(f'An exception occurred to delete customer by id')
             return False
 
         finally:

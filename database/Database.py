@@ -97,7 +97,7 @@ class Database:
                 sql = """
                 CREATE TABLE IF NOT EXISTS room (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                number INTEGER NOT NULL,
+                number INTEGER NOT NULL UNIQUE ,
                 capacity INTEGER NOT NULL,
                 create_at TIMESTAMP NOT NULL,
                 update_at TIMESTAMP NOT NULL
@@ -149,7 +149,7 @@ class Database:
                 CREATE TABLE IF NOT EXISTS ticket (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 session_id INTEGER NOT NULL REFERENCES session (id),
-                user_id INTEGER NOT NULL REFERENCES customer (id),
+                customer_id INTEGER NOT NULL REFERENCES customer (id),
                 price REAL NOT NULL,
                 status TEXT NOT NULL,
                 create_at TIMESTAMP NOT NULL,

@@ -25,6 +25,13 @@ class AdminService:
             return {"admin": response}
         raise HTTPException(status_code=404, detail="Admin not found")
 
+    @app.get("/admin")
+    async def get_all(self):
+        response = self.admin_repository.get_all()
+        if response:
+            return response
+        raise HTTPException(status_code=404, detail="An error occurred to fetch the data")
+
     @app.put("/admin/{id}")
     async def update(self, id: int, admin: Admin):
         response = self.admin_repository.update(id, admin)

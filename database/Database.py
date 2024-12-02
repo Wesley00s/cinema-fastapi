@@ -171,7 +171,3 @@ class Database:
         Database.create_room_table()
         Database.create_session_table()
         Database.create_ticket_table()
-
-
-if __name__ == '__main__':
-    Database.create_all_tables()

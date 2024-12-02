@@ -1,4 +1,4 @@
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 
 import bcrypt
 
@@ -136,6 +136,28 @@ class AdminRepository:
             db.close()
 
     @staticmethod
+    def get_all() -> Optional[list[Dict]]:
+        db = Connection()
+        try:
+            db.connect()
+            cursor = db.get_cursor()
+            if cursor:
+                sql = """
+                SELECT * FROM admin
+                """
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                columns = [desc[0] for desc in cursor.description]
+                result = [dict(zip(columns, row)) for row in rows]
+                return result
+        except Exception as e:
+            db.connection.rollback()
+            print(f'An exception occurred to get all admins, {e}')
+            return None
+        finally:
+            db.close()
+
+    @staticmethod
     def delete(id: int):
         db = Connection()
         try:
@@ -183,3 +205,4 @@ class AdminRepository:
             return None
         finally:
             db.close()
+

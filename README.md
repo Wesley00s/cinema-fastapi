@@ -56,7 +56,7 @@ A API estará disponível em [http://localhost:8000](http://localhost:8000).
 ### Importando a Coleção
 
 1. Abra o Postman.
-2. Vá para **File > Import** e selecione o arquivo `Cinema_Fastapi.postman_collection.json` ou por esse link [postman](undefined/workspace/academic/collection/32579915-3acbd4f0-34f7-4cdf-951f-65ad980c2ae1?action=share&creator=32579915) fornecido neste projeto.
+2. Vá para **File > Import** e selecione o arquivo `Cinema_Fastapi.postman_collection.json` ou por esse link [postman](https://www.postman.com/material-meteorologist-76512622/academic/collection/yu9wawr/cinema-fastapi?action=share&creator=32579915) fornecido neste projeto.
 3. Após a importação, você verá as rotas organizadas por categoria: Clientes, Administradores, Filmes, Salas, Sessões e Ingressos.
 
 ### Configurando o Ambiente

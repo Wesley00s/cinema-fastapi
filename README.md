@@ -2,7 +2,7 @@
 
 ## Sobre o Projeto
 
-Esta API foi desenvolvida para gerenciar operações de cinema de forma simples e eficiente. Ela inclui funcionalidades para gerenciar clientes, administradores, filmes, salas, sessões e ingressos. É ideal para aplicações de gestão de cinemas de pequeno porte.
+Esta API foi desenvolvida para gerenciar operações de cinema de forma simples e eficiente. Ela inclui funcionalidades para gerenciar clientes, administradores, filmes, salas e sessões. É ideal para aplicações de gestão de cinemas de pequeno porte.
 
 ---
 
@@ -12,7 +12,6 @@ Esta API foi desenvolvida para gerenciar operações de cinema de forma simples 
 - **Filmes**: Adição, edição e exclusão de filmes.
 - **Salas**: Gerenciamento de salas de cinema.
 - **Sessões**: Criação e gerenciamento de sessões de filmes.
-- **Ingressos**: Compra, atualização e consulta de ingressos.
 
 ---
 

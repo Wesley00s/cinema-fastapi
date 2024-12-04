@@ -7,13 +7,11 @@ from repository.CustomerRepository import CustomerRepository
 from repository.MovieRepository import MovieRepository
 from repository.RoomRepository import RoomRepository
 from repository.SessionRepository import SessionRepository
-from repository.TicketRepository import TicketRepository
 from service.AdminService import AdminService
 from service.CustomerService import CustomerService
 from service.MovieService import MovieService
 from service.RoomService import RoomService
 from service.SessionService import SessionService
-from service.TicketService import TicketService
 
 app = FastAPI()
 
@@ -36,12 +34,6 @@ session_service = SessionService(
     movie_repository
 )
 
-ticket_repository = TicketRepository()
-ticket_service = TicketService(
-    ticket_repository,
-    session_repository,
-    customer_repository
-)
 
 app.add_api_route("/customer", customer_service.create, methods=["POST"], tags=['Customer'])
 app.add_api_route("/customer/{id}", customer_service.get_by_id, methods=["GET"], tags=['Customer'])
@@ -74,12 +66,6 @@ app.add_api_route("/session/{id}", session_service.get_by_id, methods=["GET"], t
 app.add_api_route("/session", session_service.get_all, methods=["GET"], tags=['Session'])
 app.add_api_route("/session/{id}", session_service.update, methods=["PUT"], tags=['Session'])
 app.add_api_route("/session/{id}", session_service.delete, methods=["DELETE"], tags=['Session'])
-
-app.add_api_route("/ticket", ticket_service.create, methods=["POST"], tags=['Ticket'])
-app.add_api_route("/ticket/{id}", ticket_service.get_by_id, methods=["GET"], tags=['Ticket'])
-app.add_api_route("/ticket", ticket_service.get_all, methods=["GET"], tags=['Ticket'])
-app.add_api_route("/ticket/{id}", ticket_service.update, methods=["PUT"], tags=['Ticket'])
-app.add_api_route("/ticket/{id}", ticket_service.delete, methods=["DELETE"], tags=['Ticket'])
 
 if __name__ == '__main__':
     Database.create_all_tables()

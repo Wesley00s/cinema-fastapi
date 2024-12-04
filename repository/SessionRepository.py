@@ -111,7 +111,7 @@ class SessionRepository:
                 if session.language and session.language != existing_session['language']:
                     update_fields.append("language = ?")
                     values.append(session.language)
-                if session.subtitles and session.subtitles != existing_session['subtitles']:
+                if session.subtitles is not None and session.subtitles != bool(existing_session['subtitles']):
                     update_fields.append("subtitles = ?")
                     values.append(session.subtitles)
                 if session.start_time and session.start_time != existing_session['start_time']:
@@ -133,7 +133,7 @@ class SessionRepository:
 
                 set_clause = ", ".join(update_fields)
                 sql2 = f"""
-                    UPDATE room
+                    UPDATE session
                     SET {set_clause}
                     WHERE id = ?
                 """
@@ -142,12 +142,11 @@ class SessionRepository:
 
                 cursor.execute(sql2, values)
                 db.connection.commit()
-                print(f"Room with id {id} updated successfully.")
                 return True
 
         except Exception as e:
             db.connection.rollback()
-            print(f"Error updating customer with id {id}: {e}")
+            print(f"Error updating session with id {id}: {e}")
             return False
         finally:
             db.close()

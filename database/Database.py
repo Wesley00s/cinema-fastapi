@@ -138,30 +138,6 @@ class Database:
         finally:
             db.close()
 
-    @staticmethod
-    def create_ticket_table():
-        db = Connection()
-        try:
-            db.connect()
-            cursor = db.get_cursor()
-            if cursor:
-                sql = """
-                CREATE TABLE IF NOT EXISTS ticket (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                session_id INTEGER NOT NULL REFERENCES session (id),
-                customer_id INTEGER NOT NULL REFERENCES customer (id),
-                price REAL NOT NULL,
-                status TEXT NOT NULL,
-                create_at TIMESTAMP NOT NULL,
-                update_at TIMESTAMP NOT NULL
-                );
-                """
-                cursor.execute(sql)
-
-        except Exception as e:
-            print(f'An error occurred while creating table: {e}')
-        finally:
-            db.close()
 
     @staticmethod
     def create_all_tables():
@@ -170,4 +146,3 @@ class Database:
         Database.create_movie_table()
         Database.create_room_table()
         Database.create_session_table()
-        Database.create_ticket_table()

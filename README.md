@@ -50,7 +50,7 @@ Esta API foi desenvolvida para gerenciar operações de cinema de forma simples 
 
 5. Execute a aplicação:
     ```bash
-    uvicorn main:app --reload
+    uvicorn app.main:app --reload
     ```
 
 A API estará disponível em [http://localhost:8000](http://localhost:8000).

@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from fastapi import Depends, HTTPException, status, APIRouter, Response
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
@@ -11,23 +12,42 @@ router = APIRouter()
 
 @router.get('/movie')
 def get_movies(db: Session = Depends(get_db)):
-    movies = db.query(models.Movie).all()
-    return {'status': 'success', 'results': len(movies), 'movies': movies}
-
+    try:
+        movies = db.query(models.Movie).all()
+        return {'status': 'success', 'results': len(movies), 'movies': movies}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred."
+        )
 
 @router.post('/movie', status_code=status.HTTP_201_CREATED)
 def create_movie(payload: schemas.MovieBaseSchema, db: Session = Depends(get_db)):
     new_movie = models.Movie(**payload.model_dump())
-    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    new_movie.create_at = now
-    new_movie.update_at = now
-    db.add(new_movie)
-    db.commit()
-    db.refresh(new_movie)
-    return {"status": "success", "movie": new_movie}
+    try:
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        new_movie.create_at = now
+        new_movie.update_at = now
+        db.add(new_movie)
+        db.commit()
+        db.refresh(new_movie)
+        return {"status": "success", "movie": new_movie}
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="A database integrity error occurred. Please verify your data."
+        )
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred."
+        )
 
 
-@router.get('/movie/{id}')
+@router.get('/movie/')
 def get_movie(id: int, db: Session = Depends(get_db)):
     movie = db.query(models.Movie).filter(models.Movie.id == id).first()
     if not movie:
@@ -36,7 +56,7 @@ def get_movie(id: int, db: Session = Depends(get_db)):
     return {"status": "success", "movie": movie}
 
 
-@router.patch('/movie/{id}')
+@router.patch('/movie/')
 def update_movie(id: int, payload: schemas.MovieBaseSchema, db: Session = Depends(get_db)):
     movie_query = db.query(models.Movie).filter(models.Movie.id == id)
     db_movie = movie_query.first()
@@ -48,12 +68,25 @@ def update_movie(id: int, payload: schemas.MovieBaseSchema, db: Session = Depend
     db_movie.update_at = now
     update_data = payload.model_dump(exclude_unset=True)
     movie_query.update(update_data, synchronize_session=False)
-    db.commit()
-    db.refresh(db_movie)
-    return {"status": "success", "movie": db_movie}
+    try:
+        db.commit()
+        db.refresh(db_movie)
+        return {"status": "success", "movie": db_movie}
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="A database integrity error occurred. Please verify your data."
+        )
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occurred. {e}"
+        )
 
 
-@router.delete('/movie/{id}')
+@router.delete('/movie/')
 def delete_movie(id: int, db: Session = Depends(get_db)):
     movie_query = db.query(models.Movie).filter(models.Movie.id == id)
     movie = movie_query.first()

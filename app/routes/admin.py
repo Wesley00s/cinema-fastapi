@@ -22,7 +22,7 @@ def get_admins(db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An unexpected error occurred."
+            detail=f"An unexpected error occurred. {e}"
         )
 
 
@@ -47,11 +47,11 @@ def create_admin(payload: schemas.AdminBaseSchema, db: Session = Depends(get_db)
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An unexpected error occurred."
+            detail=f"An unexpected error occurred. {e}"
         )
 
 
-@router.get('/admin/{id}')
+@router.get('/admin/')
 def get_admin(id: UUID, db: Session = Depends(get_db)):
     admin = db.query(models.Admin).filter(models.Admin.id == id).first()
     if not admin:
@@ -60,7 +60,7 @@ def get_admin(id: UUID, db: Session = Depends(get_db)):
     return {"status": "success", "admin": admin}
 
 
-@router.patch('/admin/{id}')
+@router.patch('/admin/')
 def update_admin(id: UUID, payload: schemas.AdminBaseSchema, db: Session = Depends(get_db)):
     admin_query = db.query(models.Admin).filter(models.Admin.id == id)
     db_admin = admin_query.first()
@@ -84,11 +84,11 @@ def update_admin(id: UUID, payload: schemas.AdminBaseSchema, db: Session = Depen
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An unexpected error occurred."
+            detail=f"An unexpected error occurred. {e}"
         )
 
 
-@router.delete('/admin/{id}')
+@router.delete('/admin/')
 def delete_admin(id: UUID, db: Session = Depends(get_db)):
     admin_query = db.query(models.Admin).filter(models.Admin.id == id)
     admin = admin_query.first()

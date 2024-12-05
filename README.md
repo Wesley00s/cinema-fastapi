@@ -1,8 +1,8 @@
-# Cinema FastAPI
+# Cinema FastAPI 2.0
 
 ## Sobre o Projeto
 
-Esta API foi desenvolvida para gerenciar operações de cinema de forma simples e eficiente. Ela inclui funcionalidades para gerenciar clientes, administradores, filmes, salas e sessões. É ideal para aplicações de gestão de cinemas de pequeno porte.
+Esta API foi desenvolvida para gerenciar operações de cinema de forma simples e eficiente. Ela inclui funcionalidades para gerenciar clientes, administradores, filmes, salas, sessões e ingressos. É ideal para aplicações de gestão de cinemas de pequeno e médio porte.
 
 ---
 
@@ -12,6 +12,7 @@ Esta API foi desenvolvida para gerenciar operações de cinema de forma simples 
 - **Filmes**: Adição, edição e exclusão de filmes.
 - **Salas**: Gerenciamento de salas de cinema.
 - **Sessões**: Criação e gerenciamento de sessões de filmes.
+- **Ingressos**: Compra, atualização e consulta de ingressos.
 
 ---
 
@@ -20,6 +21,7 @@ Esta API foi desenvolvida para gerenciar operações de cinema de forma simples 
 ### Pré-requisitos
 - Python 3.9 ou superior
 - Gerenciador de pacotes `pip`
+- Docker
 
 ### Passos para Instalação
 
@@ -40,8 +42,13 @@ Esta API foi desenvolvida para gerenciar operações de cinema de forma simples 
     ```bash
     pip install -r requirements.txt
     ```
+    
+4. Exexute o arquivo `docker-compose.yaml` para criar o container do PostgreSQL:
+   ```bash
+   docker compose up -d --build
+   ```
 
-4. Execute a aplicação:
+5. Execute a aplicação:
     ```bash
     uvicorn main:app --reload
     ```
@@ -55,8 +62,8 @@ A API estará disponível em [http://localhost:8000](http://localhost:8000).
 ### Importando a Coleção
 
 1. Abra o Postman.
-2. Vá para **File > Import** e selecione o arquivo `Cinema_Fastapi.postman_collection.json` ou por esse link [postman](https://www.postman.com/material-meteorologist-76512622/academic/collection/yu9wawr/cinema-fastapi?action=share&creator=32579915) fornecido neste projeto.
-3. Após a importação, você verá as rotas organizadas por categoria: Clientes, Administradores, Filmes, Salas, Sessões e Ingressos.
+2. Acesse esse link [postman](https://www.postman.com/material-meteorologist-76512622/academic/collection/yu9wawr/cinema-fastapi?action=share&creator=32579915) para acessar a coleção no postman.
+3. Após acessar, você verá as rotas organizadas por categoria: Clientes, Administradores, Filmes, Salas, Sessões e Ingressos.
 
 ### Configurando o Ambiente
 

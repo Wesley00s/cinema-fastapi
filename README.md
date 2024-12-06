@@ -56,8 +56,8 @@ Esta API foi desenvolvida para gerenciar operações de cinema de forma simples 
 A API estará disponível em [http://localhost:8000](http://localhost:8000). Ao acessar esse endereço se você ver essa mensagem, deu tudo certo:
 ```json
 {
-    'status': 'success',
-    'message': 'Cinema API say hello 👋'
+    "status": "success",
+    "message": "Cinema API say hello 👋"
 }
 ```
 

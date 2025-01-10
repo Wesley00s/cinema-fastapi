@@ -1,6 +1,8 @@
 services:
   postgres:
     image: postgres
+    networks:
+      - cinema_net
     container_name: postgres
     ports:
       - '5432:5432'
@@ -9,5 +11,25 @@ services:
       - ./.env
     volumes:
       - postgres-db:/var/lib/postgresql/data
+
+  app:
+    networks:
+      - cinema_net
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cinema_api
+    ports:
+      - '8000:8000'
+    restart: always
+    depends_on:
+      - postgres
+    env_file:
+      - ./.env
+
 volumes:
   postgres-db:
+
+networks:
+  cinema_net:
+    driver: bridge

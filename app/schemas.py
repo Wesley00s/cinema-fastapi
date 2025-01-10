@@ -18,8 +18,8 @@ class CustomerBaseSchema(BaseModel):
     age: int | None = None
 
     class Config:
-        orm_mode = True
-        allow_population_by_field_name = True
+        from_attributes = True
+        populate_by_name = True
         arbitrary_types_allowed = True
 
 class CustomerSchemeResponse(BaseModel):
@@ -39,8 +39,8 @@ class AdminBaseSchema(BaseModel):
     country: str | None = None
 
     class Config:
-        orm_mode = True
-        allow_population_by_field_name = True
+        from_attributes = True
+        populate_by_name = True
         arbitrary_types_allowed = True
 
 class AdminSchemeResponse(BaseModel):
@@ -60,8 +60,8 @@ class MovieBaseSchema(BaseModel):
     update_at: datetime | None = None
 
     class Config:
-        orm_mode = True
-        allow_population_by_field_name = True
+        from_attributes = True
+        populate_by_name = True
         arbitrary_types_allowed = True
 
 class MovieSchemeResponse(BaseModel):
@@ -76,8 +76,8 @@ class RoomBaseSchema(BaseModel):
     update_at: datetime | None = None
 
     class Config:
-        orm_mode = True
-        allow_population_by_field_name = True
+        from_attributes = True
+        populate_by_name = True
         arbitrary_types_allowed = True
 
 class RoomSchemeResponse(BaseModel):
@@ -97,8 +97,8 @@ class SessionBaseSchema(BaseModel):
     update_at: datetime | None = None
 
     class Config:
-        orm_mode = True
-        allow_population_by_field_name = True
+        from_attributes = True
+        populate_by_name = True
         arbitrary_types_allowed = True
 
 class SessionSchemeResponse(BaseModel):
@@ -116,8 +116,8 @@ class TicketBaseSchema(BaseModel):
     update_at: datetime | None = None
 
     class Config:
-        orm_mode = True
-        allow_population_by_field_name = True
+        from_attributes = True
+        populate_by_name = True
         arbitrary_types_allowed = True
 
 class TicketSchemeResponse(BaseModel):

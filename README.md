@@ -1,4 +1,4 @@
-# Cinema FastAPI 2.0.0
+# Cinema FastAPI 2.0.1
 
 ## Sobre o Projeto
 
@@ -19,9 +19,10 @@ Esta API foi desenvolvida para gerenciar operações de cinema de forma simples 
 ## Instalação e Execução
 
 ### Pré-requisitos
-- Python 3.9 ou superior
+- Python 3.10 ou superior
 - Gerenciador de pacotes `pip`
 - Docker
+- Docker compose
 
 ### Passos para Instalação
 
@@ -35,22 +36,14 @@ Esta API foi desenvolvida para gerenciar operações de cinema de forma simples 
     ```bash
     python -m venv venv
     source venv/bin/activate  # Para Linux/MacOS
-    venv\Scripts\activate     # Para Windows
     ```
-
-3. Instale as dependências:
-    ```bash
-    pip install -r requirements.txt
-    ```
-    
-4. Exexute o arquivo `docker-compose.yaml` para criar o container do PostgreSQL:
    ```bash
-   docker compose up -d --build
+   venv\Scripts\activate     # Para Windows
    ```
 
-5. Execute a aplicação:
+3. Inicie os containers docker:
     ```bash
-    uvicorn app.main:app --reload
+    docker compose up -d --build
     ```
 
 A API estará disponível em [http://localhost:8000](http://localhost:8000). Ao acessar esse endereço se você ver essa mensagem, deu tudo certo:

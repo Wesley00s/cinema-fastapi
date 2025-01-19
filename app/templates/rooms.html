@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/rooms.css">
+    <title>Gerenciar Salas</title>
+</head>
+<body>
+<div class="rooms-container">
+    <h2>Gerenciar Salas</h2>
+    <form id="roomsForm">
+        <div class="form-group">
+            <label for="roomNumber">Número da sala</label>
+            <input type="number" id="roomNumber" name="roomNumber" placeholder="Digite o número da sala" required>
+        </div>
+        <div class="form-group">
+            <label for="capacity">Capacidade</label>
+            <input type="number" id="capacity" name="capacity" placeholder="Digite a capacidade da sala" required>
+        </div>
+        <button type="submit" class="add-btn">Adicionar</button>
+
+    </form>
+</div>
+</body>
+<script src="../static/js/rooms.js"></script>
+</html>

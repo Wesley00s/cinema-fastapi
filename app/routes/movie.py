@@ -47,7 +47,7 @@ def create_movie(payload: schemas.MovieBaseSchema, db: Session = Depends(get_db)
         )
 
 
-@router.get('/movie/')
+@router.get('/movie')
 def get_movie(id: int, db: Session = Depends(get_db)):
     movie = db.query(models.Movie).filter(models.Movie.id == id).first()
     if not movie:
@@ -56,7 +56,7 @@ def get_movie(id: int, db: Session = Depends(get_db)):
     return {"status": "success", "movie": movie}
 
 
-@router.patch('/movie/')
+@router.patch('/movie')
 def update_movie(id: int, payload: schemas.MovieBaseSchema, db: Session = Depends(get_db)):
     movie_query = db.query(models.Movie).filter(models.Movie.id == id)
     db_movie = movie_query.first()
@@ -86,7 +86,7 @@ def update_movie(id: int, payload: schemas.MovieBaseSchema, db: Session = Depend
         )
 
 
-@router.delete('/movie/')
+@router.delete('/movie')
 def delete_movie(id: int, db: Session = Depends(get_db)):
     movie_query = db.query(models.Movie).filter(models.Movie.id == id)
     movie = movie_query.first()

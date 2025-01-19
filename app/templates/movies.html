@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Filmes</title>
+    <link rel="stylesheet" href="../static/css/movies.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciamento de Filmes</h1>
+
+        <form id="movieForm">
+            <label for="title">Título</label>
+            <input type="text" id="title" name="title" placeholder="Enter movie title" required>
+
+            <label for="genre">Gênero</label>
+            <input type="text" id="genre" name="genre" placeholder="Enter movie genre" required>
+
+            <label for="synopsis">Sinopse</label>
+            <textarea id="synopsis" name="synopsis" placeholder="Enter movie synopsis" rows="4" required></textarea>
+
+            <label for="duration">Duração (min):</label>
+            <input type="number" id="duration" name="duration" placeholder="Enter movie duration" required>
+
+            <label for="age_rating">Classificação indicativa</label>
+            <input type="number" id="age_rating" name="age_rating" placeholder="Enter age rating" required>
+
+            <label for="director">Diretor</label>
+            <input type="text" id="director" name="director" placeholder="Enter director's name" required>
+
+            <label for="release_date">Lançamento</label>
+            <input type="date" id="release_date" name="release_date" required>
+
+            <button type="submit" class="add-movie">Adicionar filme</button>
+        </form>
+    </div>
+
+    <div class="movie-list container" id="movieList">
+        <h2>Movie List</h2>
+        <div class="movie-container">
+        </div>
+    </div>
+
+    <div id="edit-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Editar Filme</h2>
+            <form id="editMovieForm">
+                <input type="hidden" id="movie_id_edited" />
+
+                <label for="title_edited">Título:</label>
+                <input type="text" id="title_edited" name="title_edited" required />
+
+                <label for="genre_edited">Gênero:</label>
+                <input type="text" id="genre_edited" name="genre_edited" required />
+
+                <label for="synopsis_edited">Sinopse:</label>
+                <textarea id="synopsis_edited" name="synopsis_edited" rows="4" required></textarea>
+
+                <label for="duration_edited">Duração (min):</label>
+                <input type="number" id="duration_edited" name="duration_edited" required />
+
+                <label for="age_rating_edited">Classificação indicativa:</label>
+                <input type="number" id="age_rating_edited" name="age_rating_edited" required />
+
+                <label for="director_edited">Diretor:</label>
+                <input type="text" id="director_edited" name="director_edited" required />
+
+                <label for="release_date_edited">Lançamento:</label>
+                <input type="date" id="release_date_edited" name="release_date" required />
+
+                <button type="submit">Salvar</button>
+                <button type="button" id="close-modal">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="dialog-overlay" class="dialog-overlay hidden">
+        <div class="dialog-box">
+            <p id="dialog-message">Você tem certeza que deseja excluir este filme?</p>
+            <div class="dialog-actions">
+                <button id="dialog-confirm">Confirmar</button>
+                <button id="dialog-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="../static/js/movies.js"></script>
+</html>

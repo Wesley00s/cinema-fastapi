@@ -37,7 +37,7 @@ movieForm.addEventListener('submit', async function (event) {
 });
 
 
-async function loadMovies() {
+const loadMovies = async () => {
     try {
         const response = await fetch('/movie');
         const data = await response.json();

@@ -48,7 +48,7 @@ def create_room(payload: schemas.RoomBaseSchema, db: Session = Depends(get_db)):
         )
 
 
-@router.get('/room/')
+@router.get('/room')
 def get_room(id: int, db: Session = Depends(get_db)):
     room = db.query(models.Room).filter(models.Room.id == id).first()
     if not room:
@@ -57,7 +57,7 @@ def get_room(id: int, db: Session = Depends(get_db)):
     return {"status": "success", "room": room}
 
 
-@router.patch('/room/')
+@router.patch('/room')
 def update_room(id: int, payload: schemas.RoomBaseSchema, db: Session = Depends(get_db)):
     room_query = db.query(models.Room).filter(models.Room.id == id)
     db_room = room_query.first()
@@ -87,7 +87,7 @@ def update_room(id: int, payload: schemas.RoomBaseSchema, db: Session = Depends(
         )
 
 
-@router.delete('/room/')
+@router.delete('/room')
 def delete_room(id: int, db: Session = Depends(get_db)):
     room_query = db.query(models.Room).filter(models.Room.id == id)
     room = room_query.first()

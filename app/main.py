@@ -74,6 +74,10 @@ async def movies(request: Request):
 async def movies(request: Request):
     return templates.TemplateResponse("rooms.html", {"request": request})
 
+@app.get('/sessions', tags=['Session'], response_class=HTMLResponse)
+async def movies(request: Request):
+    return templates.TemplateResponse("session.html", {"request": request})
+
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8000)

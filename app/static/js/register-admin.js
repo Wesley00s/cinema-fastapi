@@ -14,13 +14,14 @@ document.getElementById('register-form').addEventListener('submit', async functi
         });
 
         if (response.ok) {
-            window.location.href = '/home';
+            window.location.href = '/home-admin';
         } else {
             const error = await response.json();
             console.log('Erro: ' + error.detail);
+            alert('An error occurred while creating admin account.');
         }
     } catch (e) {
-        console.log('Ocorreu um erro inesperado: ' + e.message);
+        console.log('Occurred an unexpected error: ' + e.message);
     }
 });
 

@@ -49,7 +49,7 @@ def create_customer(payload: schemas.CustomerBaseSchema, db: Session = Depends(g
         )
 
 
-@router.get('/customer/')
+@router.get('/customer')
 def get_customer(id: UUID, db: Session = Depends(get_db)):
     customer = db.query(models.Customer).filter(models.Customer.id == id).first()
     if not customer:
@@ -58,7 +58,16 @@ def get_customer(id: UUID, db: Session = Depends(get_db)):
     return {"status": "success", "customer": customer}
 
 
-@router.patch('/customer/')
+@router.get('/customer/email')
+def get_customer(email: str, db: Session = Depends(get_db)):
+    customer = db.query(models.Customer).filter(models.Customer.email == email).first()
+    if not customer:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"No customer with this email: {email} found")
+    return {"status": "success", "customer": customer}
+
+
+@router.patch('/customer')
 def update_customer(id: UUID, payload: schemas.CustomerBaseSchema, db: Session = Depends(get_db)):
     customer_query = db.query(models.Customer).filter(models.Customer.id == id)
     db_customer = customer_query.first()
@@ -86,7 +95,7 @@ def update_customer(id: UUID, payload: schemas.CustomerBaseSchema, db: Session =
         )
 
 
-@router.delete('/customer/')
+@router.delete('/customer')
 def delete_customer(id: UUID, db: Session = Depends(get_db)):
     customer_query = db.query(models.Customer).filter(models.Customer.id == id)
     customer = customer_query.first()

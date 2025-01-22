@@ -14,13 +14,18 @@ document.getElementById('register-form').addEventListener('submit', async functi
         });
 
         if (response.ok) {
-            window.location.href = '/home';
+            const userResponse = await fetch(`/customer/email?email=${data.email}`);
+            const userData = await userResponse.json();
+            sessionStorage.setItem('userId', userData.customer.id);
+
+            window.location.href = '/home-customer';
         } else {
             const error = await response.json();
-            console.log('Erro: ' + error.detail);
+            console.log('Error: ' + error.detail);
+            alert('An error occurred while creating customer account.');
         }
     } catch (e) {
-        console.log('Ocorreu um erro inesperado: ' + e.message);
+        console.log('Occurred an unexpected error: ' + e.message);
     }
 });
 

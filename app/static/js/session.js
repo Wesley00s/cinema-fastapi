@@ -1,6 +1,7 @@
 const sessionForm = document.querySelector('#sessionForm');
-const editRoomForm = document.querySelector('#editRoomForm');
+const editSessionForm = document.querySelector('#editSessionForm');
 const radios = document.getElementsByName('subtitles')
+const radiosEdited = document.getElementsByName('subtitlesEdited')
 let selectedRadio = '';
 
 radios.forEach(radio => {
@@ -19,7 +20,7 @@ sessionForm.addEventListener('submit', async (event) => {
 
     const sessionData = {
         movie_id: parseInt(document.getElementById('movieId').value),
-        room_id: parseInt(document.getElementById('roomId').value),
+        room_number: parseInt(document.getElementById('roomNumber').value),
         start_time: formatDate(document.getElementById('startTime').value),
         end_time: formatDate(document.getElementById('endTime').value),
         price: parseFloat(document.getElementById('sessionValue').value),
@@ -51,11 +52,12 @@ sessionForm.addEventListener('submit', async (event) => {
     }
 });
 
-const loadRooms = async () => {
+const loadSessions = async () => {
     try {
         const response = await fetch('/session');
         const data = await response.json();
         const sessions = data.sessions;
+        console.log(sessions);
 
         console.log(sessions);
 
@@ -68,11 +70,16 @@ const loadRooms = async () => {
 
             sessionCard.innerHTML = `
                     <div class="card-header">
-                        <h3>${session.number}</h3>
+                        <h3>${session.id}</h3>
                     </div>
                     <div class="card-body">
-                        <p><strong>ID:</strong> ${session.id}</p>
-                        <p><strong>Número:</strong> ${session.capacity}</p>
+                        <p><strong>ID do filme:</strong> ${session.movie_id}</p>
+                        <p><strong>Número da sala:</strong> ${session.room_number}</p>
+                        <p><strong>Inicio:</strong> ${session.start_time}</p>
+                        <p><strong>Fim:</strong> ${session.end_time}</p>
+                        <p><strong>Valor da sessão (R$):</strong> ${session.price}</p>
+                        <p><strong>Idioma do filme:</strong> ${session.language}</p>
+                        <p><strong>Com legendas:</strong> ${session.subtitles ? 'Sim' : 'Não'}</p>
                     </div>
                     <div id="rowConfig">
                         <img class="delete-btn" src="../static/icons/ic-trash.png" alt="" data-id="${session.id}""/>
@@ -101,7 +108,7 @@ document.querySelector('.session-container').addEventListener('click', async (e)
                 const response = await fetch(`/session?id=${sessionId}`, {method: 'DELETE'});
 
                 if (response.ok) {
-                    await loadRooms();
+                    await loadSessions();
                 } else {
                     alert("Erro ao excluir a sala.");
                 }
@@ -122,16 +129,30 @@ document.querySelector('.session-container').addEventListener('click', async (e)
     if (e.target && e.target.classList.contains('edit-btn')) {
         const sessionData = JSON.parse(e.target.dataset.session);
 
-        document.getElementById('number_edited').value = sessionData.number;
-        document.getElementById('capacity_edited').value = sessionData.capacity;
+        document.getElementById('movieIdEdited').value = sessionData.movie_id;
+        document.getElementById('roomNumberEdited').value = sessionData.room_number;
+        document.getElementById('startTimeEdited').value = sessionData.start_time;
+        document.getElementById('endTimeEdited').value = sessionData.end_time;
+        document.getElementById('sessionValueEdited').value = sessionData.price;
+        document.getElementById('languageEdited').value = sessionData.language;
+        radiosEdited.forEach((radio) => {
+            if (sessionData.subtitles && radio.value === 'yes') {
+                radio.checked = true;
+            } else if (!sessionData.subtitles && radio.value === 'no') {
+                radio.checked = true;
+            }
+
+            radio.addEventListener('change', (e) => {
+                sessionData.subtitles = e.target.value === 'yes';
+            });
+        });
 
         document.getElementById('session_id_edited').value = sessionData.id;
-
         document.getElementById('edit-modal').classList.remove('hidden');
     }
 });
 
-editRoomForm.addEventListener('submit', async function (event) {
+editSessionForm.addEventListener('submit', async function (event) {
     event.preventDefault();
 
     const sessionId = document.getElementById('session_id_edited').value;
@@ -139,7 +160,6 @@ editRoomForm.addEventListener('submit', async function (event) {
     const sessionData = {
         number: document.getElementById('number_edited').value,
         capacity: document.getElementById('capacity_edited').value,
-
     };
 
     try {
@@ -154,14 +174,14 @@ editRoomForm.addEventListener('submit', async function (event) {
         const result = await response.json();
 
         if (response.ok) {
-            await loadRooms();
+            await loadSessions();
             editRoomForm.reset();
             document.getElementById('edit-modal').classList.add('hidden');
         } else {
-            alert(`Erro: ${result.detail}`);
+            alert(`Error: ${result.detail}`);
         }
     } catch (error) {
-        console.error('Erro:', error);
+        console.error('Error:', error);
     }
 });
 
@@ -169,5 +189,4 @@ document.getElementById('close-modal').addEventListener('click', () => {
     document.getElementById('edit-modal').classList.add('hidden');
 });
 
-
-document.addEventListener('DOMContentLoaded', loadRooms);
+document.addEventListener('DOMContentLoaded', loadSessions);

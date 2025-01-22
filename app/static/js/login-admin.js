@@ -19,6 +19,7 @@ document.getElementById('login-form').addEventListener('submit', async function 
         } else {
             const error = await response.json();
             console.log('Erro: ' + error.detail);
+            alert('Invalid login credentials or other error occurred.');
         }
     } catch (e) {
         console.log('Ocorreu um erro inesperado: ' + e.message);

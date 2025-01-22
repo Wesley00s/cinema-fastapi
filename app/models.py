@@ -45,7 +45,7 @@ class Movie(Base):
 class Room(Base):
     __tablename__ = 'room'
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-    number = Column(Integer, nullable=False)
+    number = Column(Integer, nullable=False, unique=True)
     capacity = Column(Integer, nullable=False)
     create_at = Column(DateTime, nullable=False)
     update_at = Column(DateTime, nullable=False)
@@ -55,7 +55,7 @@ class Session(Base):
     __tablename__ = 'session'
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     movie_id = Column(Integer, ForeignKey('movie.id'), nullable=False)
-    room_id = Column(Integer, ForeignKey('room.id'), nullable=False)
+    room_number = Column(Integer, ForeignKey('room.number'), nullable=False)
     start_time = Column(DateTime, nullable=False)
     end_time = Column(DateTime, nullable=False)
     price = Column(Float, nullable=False)

@@ -44,14 +44,14 @@ input, textarea, button {
 }
 
 .add-movie {
-    background-color: #5cb85c;
+    background-color: #ff8000;
     color: white;
     border: none;
     cursor: pointer;
 }
 
 .add-movie:hover {
-    background-color: #4cae4c;
+    background-color: #e37200;
 }
 
 .movie-container {

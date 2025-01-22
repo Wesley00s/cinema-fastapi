@@ -87,7 +87,7 @@ class RoomSchemeResponse(BaseModel):
 
 class SessionBaseSchema(BaseModel):
     movie_id: int | None = None
-    room_id: int | None = None
+    room_number: int | None = None
     start_time: datetime | None = None
     end_time: datetime | None = None
     price: float | None = None

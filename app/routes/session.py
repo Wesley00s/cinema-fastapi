@@ -47,7 +47,7 @@ def create_session(payload: schemas.SessionBaseSchema, db: Session = Depends(get
         )
 
 
-@router.get('/session/')
+@router.get('/session')
 def get_session(id: int, db: Session = Depends(get_db)):
     session = db.query(models.Session).filter(models.Session.id == id).first()
     if not session:
@@ -56,7 +56,7 @@ def get_session(id: int, db: Session = Depends(get_db)):
     return {"status": "success", "session": session}
 
 
-@router.patch('/session/')
+@router.patch('/session')
 def update_session(id: int, payload: schemas.SessionBaseSchema, db: Session = Depends(get_db)):
     session_query = db.query(models.Session).filter(models.Session.id == id)
     db_session = session_query.first()
@@ -86,7 +86,7 @@ def update_session(id: int, payload: schemas.SessionBaseSchema, db: Session = De
         )
 
 
-@router.delete('/session/')
+@router.delete('/session')
 def delete_session(id: int, db: Session = Depends(get_db)):
     session_query = db.query(models.Session).filter(models.Session.id == id)
     session = session_query.first()

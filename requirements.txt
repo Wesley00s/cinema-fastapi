@@ -6,3 +6,5 @@ SQLAlchemy~=2.0.36
 fastapi-utils~=0.8.0
 python-dotenv~=1.0.1
 psycopg2-binary
+starlette~=0.41.3
+jinja2

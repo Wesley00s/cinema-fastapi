@@ -42,41 +42,61 @@ app.include_router(ticket.router, tags=['Ticket'])
 async def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+
 @app.get('/home-admin', tags=['Home'], response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("home-admin.html", {"request": request})
+
 
 @app.get('/home-customer', tags=['Home'], response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("home-customer.html", {"request": request})
 
+
 @app.get('/login-admin', tags=['Login'], response_class=HTMLResponse)
 async def login(request: Request):
     return templates.TemplateResponse("login-admin.html", {"request": request})
+
 
 @app.get('/login-customer', tags=['Login'], response_class=HTMLResponse)
 async def login(request: Request):
     return templates.TemplateResponse("login-customer.html", {"request": request})
 
+
 @app.get('/register-admin', tags=['Register'], response_class=HTMLResponse)
 async def register(request: Request):
     return templates.TemplateResponse("register-admin.html", {"request": request})
+
 
 @app.get('/register-customer', tags=['Register'], response_class=HTMLResponse)
 async def register(request: Request):
     return templates.TemplateResponse("register-customer.html", {"request": request})
 
+
 @app.get('/movies', tags=['Movies'], response_class=HTMLResponse)
 async def movies(request: Request):
     return templates.TemplateResponse("movies.html", {"request": request})
+
 
 @app.get('/rooms', tags=['Room'], response_class=HTMLResponse)
 async def movies(request: Request):
     return templates.TemplateResponse("rooms.html", {"request": request})
 
+
 @app.get('/sessions', tags=['Session'], response_class=HTMLResponse)
 async def movies(request: Request):
     return templates.TemplateResponse("session.html", {"request": request})
+
+
+@app.get('/session-customer', tags=['Session'], response_class=HTMLResponse)
+async def movies(request: Request):
+    return templates.TemplateResponse("session-customer.html", {"request": request})
+
+
+
+@app.get('/tickets', tags=['Session'], response_class=HTMLResponse)
+async def movies(request: Request):
+    return templates.TemplateResponse("ticket.html", {"request": request})
 
 
 if __name__ == '__main__':

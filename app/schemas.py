@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -47,6 +47,23 @@ class AdminSchemeResponse(BaseModel):
     status: str
     result: int
     notes: List[AdminBaseSchema]
+
+
+class CustomerImageSchema(BaseModel):
+    customer_id: str
+    image_data: str
+
+    class Config:
+        orm_mode = True
+
+
+class AdminImageSchema(BaseModel):
+    admin_id: str
+    image_data: str
+
+    class Config:
+        orm_mode = True
+
 
 class MovieBaseSchema(BaseModel):
     title: str | None = None
@@ -124,3 +141,17 @@ class TicketSchemeResponse(BaseModel):
     status: str
     result: int
     notes: List[TicketBaseSchema]
+
+from pydantic import BaseModel
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    email: Optional[str] = None
+
+
+class ResetPasswordSchema(BaseModel):
+    email: str
+    new_password: str

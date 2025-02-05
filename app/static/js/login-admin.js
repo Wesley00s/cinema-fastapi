@@ -2,7 +2,10 @@ document.getElementById('login-form').addEventListener('submit', async function 
     event.preventDefault();
 
     const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
+    const data = {
+        email: formData.get('email'),
+        password: formData.get('password')
+    };
 
     try {
         const response = await fetch('/admin/auth', {
@@ -13,15 +16,23 @@ document.getElementById('login-form').addEventListener('submit', async function 
             body: JSON.stringify(data),
         });
 
+        const responseData = await response.json();
+        console.log(responseData);
+
         if (response.ok) {
-            await response.json();
+            localStorage.setItem('access_token', responseData.access_token);
+
             window.location.href = '/home-admin';
+
         } else {
-            const error = await response.json();
-            console.log('Erro: ' + error.detail);
-            alert('Invalid login credentials or other error occurred.');
+            if (response.status === 401) {
+                alert('Credenciais inválidas');
+            } else {
+                alert(`Erro: ${responseData.detail || 'Erro desconhecido'}`);
+            }
         }
     } catch (e) {
-        console.log('Ocorreu um erro inesperado: ' + e.message);
+        console.error('Erro na requisição:', e);
+        alert('Erro de conexão com o servidor');
     }
 });

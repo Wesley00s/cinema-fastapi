@@ -8,3 +8,5 @@ python-dotenv~=1.0.1
 psycopg2-binary
 starlette~=0.41.3
 jinja2
+python-jose~=3.3.0
+python-multipart

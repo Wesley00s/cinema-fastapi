@@ -8,9 +8,23 @@
     <title>Cadastro de Administrador</title>
 </head>
 <body>
-    <div class="register-container">
-        <h2>Cadastro de Admistrador </h2>
-        <form id="register-form">
+<div class="register-container">
+    <h2>Cadastro de Admistrador </h2>
+    <form id="register-form" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="photo">Foto de Perfil</label>
+            <input type="file"
+                   id="photo"
+                   name="photo"
+                   accept="image/*"
+                   class="photo-input">
+            <small>Apenas imagens (JPG, PNG)</small>
+            <div class="photo-preview" id="photo-preview" style="display: none;">
+                <img id="preview-image" src="#" alt="Pré-visualização da Foto">
+            </div>
+        </div>
+
+        <div class="username">
             <div class="form-group">
                 <label for="first_name">Nome</label>
                 <input type="text" id="first_name" name="first_name" placeholder="Digite seu nome" required>
@@ -19,18 +33,21 @@
                 <label for="last_name">Sobrenome</label>
                 <input type="text" id="last_name" name="last_name" placeholder="Digite seu sobrenome" required>
             </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Digite seu email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Senha</label>
-                <input type="password" id="password" name="password" placeholder="Crie uma senha" required>
-            </div>
-            <div class="form-group">
-                <label for="address">Endereço</label>
-                <input type="text" id="address" name="address" placeholder="Digite seu endereço" required>
-            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Digite seu email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" placeholder="Crie uma senha" required>
+        </div>
+        <div class="form-group">
+            <label for="address">Endereço</label>
+            <input type="text" id="address" name="address" placeholder="Digite seu endereço" required>
+        </div>
+        <div class="city-state">
             <div class="form-group">
                 <label for="city">Cidade</label>
                 <input type="text" id="city" name="city" placeholder="Digite sua cidade" required>
@@ -39,6 +56,9 @@
                 <label for="state">Estado</label>
                 <input type="text" id="state" name="state" placeholder="Digite seu estado" required>
             </div>
+        </div>
+
+        <div class="cep-country">
             <div class="form-group">
                 <label for="zip_code">CEP</label>
                 <input type="text" id="zip_code" name="zip_code" placeholder="Digite seu CEP" required>
@@ -47,12 +67,13 @@
                 <label for="country">País</label>
                 <input type="text" id="country" name="country" placeholder="Digite seu país" required>
             </div>
-            <button type="submit" class="register-btn">Cadastrar</button>
-            <div class="login-link">
-                <a href="/login-admin">Já tem uma conta? Faça login</a>
-            </div>
-        </form>
-    </div>
+        </div>
+        <button type="submit" class="register-btn">Cadastrar</button>
+        <div class="login-link">
+            <a href="/login-admin">Já tem uma conta? Faça login</a>
+        </div>
+    </form>
+</div>
 
 </body>
 <script src="../static/js/register-admin.js"></script>

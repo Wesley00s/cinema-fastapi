@@ -1,7 +1,7 @@
 import uuid
 
 from app.database import Base
-from sqlalchemy import Column, String, Float, Integer, DateTime, ForeignKey, Boolean, UUID
+from sqlalchemy import Column, String, Float, Integer, DateTime, ForeignKey, Boolean, UUID, LargeBinary
 
 
 class User(Base):
@@ -26,6 +26,19 @@ class Customer(User):
 class Admin(User):
     __tablename__ = 'admin'
     pass
+
+class CustomerImage(Base):
+    __tablename__ = 'customer_image'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    customer_id = Column(UUID(as_uuid=True), ForeignKey('customer.id'), nullable=False)
+    image_data = Column(LargeBinary, nullable=False)
+
+
+class AdminImage(Base):
+    __tablename__ = 'admin_image'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    admin_id = Column(UUID(as_uuid=True), ForeignKey('admin.id'), nullable=False)
+    image_data = Column(LargeBinary, nullable=False)
 
 
 class Movie(Base):

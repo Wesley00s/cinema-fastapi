@@ -13,6 +13,10 @@ body {
     justify-content: center;
     height: 100vh;
     text-align: center;
+    position: relative;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 h1 {
@@ -49,3 +53,10 @@ p {
     background-color: #e67300;
 }
 
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 300px;
+    margin: 20px auto;
+}

@@ -25,7 +25,7 @@ origins = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credentials=False,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -36,7 +36,6 @@ app.include_router(movie.router, tags=['Movie'])
 app.include_router(session.router, tags=['Session'])
 app.include_router(room.router, tags=['Room'])
 app.include_router(ticket.router, tags=['Ticket'])
-
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
@@ -93,10 +92,29 @@ async def movies(request: Request):
     return templates.TemplateResponse("session-customer.html", {"request": request})
 
 
-
 @app.get('/tickets', tags=['Session'], response_class=HTMLResponse)
 async def movies(request: Request):
     return templates.TemplateResponse("ticket.html", {"request": request})
+
+
+@app.get('/profile-admin', tags=['Profile'], response_class=HTMLResponse)
+async def movies(request: Request):
+    return templates.TemplateResponse("profile-admin.html", {"request": request})
+
+
+@app.get('/profile-customer', tags=['Profile'], response_class=HTMLResponse)
+async def movies(request: Request):
+    return templates.TemplateResponse("profile-customer.html", {"request": request})
+
+
+@app.get('/recovery-password-admin', tags=['Admin'], response_class=HTMLResponse)
+async def movies(request: Request):
+    return templates.TemplateResponse("recovery-password-admin.html", {"request": request})
+
+
+@app.get('/recovery-password-customer', tags=['Customer'], response_class=HTMLResponse)
+async def movies(request: Request):
+    return templates.TemplateResponse("recovery-password-customer.html", {"request": request})
 
 
 if __name__ == '__main__':

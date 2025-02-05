@@ -1,16 +1,15 @@
-document.getElementById('login-form').addEventListener('submit', async function (event) {
+document.getElementById('reset-form').addEventListener('submit', async function (event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
     const data = {
         email: formData.get('email'),
-        password: formData.get('password')
+        new_password: formData.get('password'),
     };
-    localStorage.setItem('email', data.email);
 
     try {
-        const response = await fetch('/customer/auth', {
-            method: 'POST',
+        const response = await fetch('/customer/reset-password', {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -21,12 +20,12 @@ document.getElementById('login-form').addEventListener('submit', async function 
         console.log(responseData);
 
         if (response.ok) {
-            localStorage.setItem('access_token', responseData.access_token);
-            window.location.href = '/home-customer';
+            alert('Senha redefinida com sucesso!');
+            window.location.href = '/login-customer';
 
         } else {
             if (response.status === 401) {
-                alert('Credenciais inválidas');
+                alert('Usuário não encontrado!');
             } else {
                 alert(`Erro: ${responseData.detail || 'Erro desconhecido'}`);
             }

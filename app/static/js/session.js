@@ -42,7 +42,7 @@ sessionForm.addEventListener('submit', async (event) => {
         const result = await response.json();
 
         if (response.ok) {
-            await loadRooms()
+            await loadSessions()
             sessionForm.reset();
         } else {
             alert(`Erro: ${result.detail}`);
@@ -88,6 +88,7 @@ const loadSessions = async () => {
             `;
 
             sessionContainer.appendChild(sessionCard);
+            sessionForm.reset();
         });
     } catch (error) {
         console.error('Erro ao carregar salas:', error);

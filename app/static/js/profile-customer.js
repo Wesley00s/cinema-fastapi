@@ -1,3 +1,7 @@
+document.querySelector('.logout-btn').addEventListener('click', () => {
+    localStorage.clear();
+});
+
 async function loadProfileData() {
     const email = localStorage.getItem('email');
     try {

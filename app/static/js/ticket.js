@@ -3,7 +3,7 @@ const ticketContainer = document.querySelector('.ticket-container');
 
 const loadTickets = async () => {
     try {
-        const response = await fetch('/ticket');
+        const response = await fetch('/ticket/all');
         const data = await response.json();
         const tickets = data.tickets;
         ticketContainer.innerHTML = '';

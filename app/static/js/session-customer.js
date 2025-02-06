@@ -45,18 +45,19 @@ const loadSessions = async () => {
 }
 
 const makeReservation = async (sessionId, price, status) => {
-    document.querySelector('.session-container').addEventListener('click', async (e) => {
+    sessionContainer.addEventListener('click', async (e) => {
         if (e.target) {
             document.getElementById('dialog-confirm').onclick = async () => {
                 const customerId = sessionStorage.getItem('userId');
 
                 const ticketData = {
                     session_id: parseInt(sessionId),
-                    customer_id: customerId,
+                    customer_id: localStorage.getItem('id'),
                     seat_number: parseInt(randomSeatNumber(1, 200)),
                     price: parseFloat(price),
                     status: status
                 };
+                console.log(ticketData);
 
                 try {
                     const response = await fetch('/ticket', {

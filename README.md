@@ -32,7 +32,7 @@ Esta API foi desenvolvida para gerenciar operações de cinema de forma simples 
     cd cinema-fastapi
     ```
 
-2. Crie e ative um ambiente virtual:
+2. Crie e ative um ambiente virtual (se desejar rodar localmente):
     ```bash
     python -m venv venv
     source venv/bin/activate  # Para Linux/MacOS

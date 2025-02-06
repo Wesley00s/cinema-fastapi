@@ -11,7 +11,7 @@ router = APIRouter()
 
 
 
-@router.get('/ticket')
+@router.get('/ticket/all')
 def get_tickets(db: Session = Depends(get_db)):
     try:
         tickets = db.query(models.Ticket).all()

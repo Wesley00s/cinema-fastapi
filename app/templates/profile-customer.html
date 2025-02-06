@@ -4,34 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil do Usuário</title>
+    <link rel="icon" type="image/png" href="../static/icons/favicon.png"/>
+
     <link rel="stylesheet" href="../static/css/profile.css">
 </head>
 <body>
-    <a href="/" class="logout-btn">Sair</a>
+<a href="/" class="logout-btn">Sair</a>
 
-    <div class="profile-container">
-        <img id="profile-photo" class="profile-photo" src="#" alt="Foto do Perfil">
+<div class="profile-container">
+    <img id="profile-photo" class="profile-photo" src="#" alt="Foto do Perfil">
 
-        <div class="profile-info">
-            <h2 id="user-name"></h2>
-            <p id="user-email"></p>
-            <p id="user-age"></p>
-        </div>
-
-        <div class="profile-section">
-            <h3>Informações Pessoais</h3>
-            <p><strong>Endereço:</strong> <span id="user-address"></span></p>
-            <p><strong>Cidade:</strong> <span id="user-city"></span></p>
-            <p><strong>Estado:</strong> <span id="user-state"></span></p>
-            <p><strong>CEP:</strong> <span id="user-zip"></span></p>
-            <p><strong>País:</strong> <span id="user-country"></span></p>
-        </div>
-
-        <div class="button-container">
-            <a href="/editar-perfil" class="btn"></a>
-            <a href="/alterar-senha" class="btn"> </a>
-        </div>
+    <div class="profile-info">
+        <h2 id="user-name"></h2>
+        <p id="user-email"></p>
+        <p id="user-age"></p>
     </div>
+
+    <div class="profile-section">
+        <h3>Informações Pessoais</h3>
+        <p><strong>Endereço:</strong> <span id="user-address"></span></p>
+        <p><strong>Cidade:</strong> <span id="user-city"></span></p>
+        <p><strong>Estado:</strong> <span id="user-state"></span></p>
+        <p><strong>CEP:</strong> <span id="user-zip"></span></p>
+        <p><strong>País:</strong> <span id="user-country"></span></p>
+    </div>
+
+    <div class="button-container">
+        <a href="/editar-perfil" class="btn"></a>
+        <a href="/alterar-senha" class="btn"> </a>
+    </div>
+</div>
 
 <script src="../static/js/profile-customer.js"></script>
 <script src="../static/js/index.js"></script>

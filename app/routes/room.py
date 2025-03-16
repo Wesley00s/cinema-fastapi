@@ -1,99 +1,97 @@
-from datetime import datetime
-
 from fastapi import Depends, HTTPException, status, APIRouter, Response
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
 
-from .. import models, schemas
-from ..database import get_db
+from app.dependencies.room_dependencies import get_room_service
+from ..schemas.room_schema import RoomBaseSchema
+from ..service.room_service import RoomService
 
 router = APIRouter()
 
 
-
-@router.get('/room')
-def get_rooms(db: Session = Depends(get_db)):
+@router.get('/room/all')
+def get_rooms(service: RoomService = Depends(get_room_service)):
     try:
-        rooms = db.query(models.Room).all()
+        rooms = service.get_all_rooms()
         return {'status': 'success', 'results': len(rooms), 'rooms': rooms}
     except Exception as e:
-        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An unexpected error occurred. {e}"
         )
+
 
 @router.post('/room', status_code=status.HTTP_201_CREATED)
-def create_room(payload: schemas.RoomBaseSchema, db: Session = Depends(get_db)):
-    new_room = models.Room(**payload.model_dump())
+def create_room(
+        payload: RoomBaseSchema,
+        service: RoomService = Depends(get_room_service)
+):
     try:
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        new_room.create_at = now
-        new_room.update_at = now
-        db.add(new_room)
-        db.commit()
-        db.refresh(new_room)
+        new_room = service.create_room(payload)
         return {"status": "success", "room": new_room}
     except IntegrityError:
-        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="A database integrity error occurred. Please verify your data."
         )
     except Exception as e:
-        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An unexpected error occurred. {e}"
         )
 
 
-@router.get('/room')
-def get_room(id: int, db: Session = Depends(get_db)):
-    room = db.query(models.Room).filter(models.Room.id == id).first()
-    if not room:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"No room with this id: {id} found")
-    return {"status": "success", "room": room}
-
-
-@router.patch('/room')
-def update_room(id: int, payload: schemas.RoomBaseSchema, db: Session = Depends(get_db)):
-    room_query = db.query(models.Room).filter(models.Room.id == id)
-    db_room = room_query.first()
-
-    if not db_room:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'No room with this id: {id} found')
-    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    db_room.update_at = now
-    update_data = payload.model_dump(exclude_unset=True)
-    room_query.update(update_data, synchronize_session=False)
+@router.get('/room/{room_id}')
+def get_room(
+        room_id: int,
+        service: RoomService = Depends(get_room_service)
+):
     try:
-        db.commit()
-        db.refresh(db_room)
-        return {"status": "success", "room": db_room}
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="A database integrity error occurred. Please verify your data."
-        )
+        room = service.get_room_by_id(room_id)
+        return {"status": "success", "room": room}
+    except HTTPException as e:
+        raise e
     except Exception as e:
-        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred. {e}"
+            detail="An unexpected error occurred."
         )
 
 
-@router.delete('/room')
-def delete_room(id: int, db: Session = Depends(get_db)):
-    room_query = db.query(models.Room).filter(models.Room.id == id)
-    room = room_query.first()
-    if not room:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'No room with this id: {id} found')
-    room_query.delete(synchronize_session=False)
-    db.commit()
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+@router.patch('/room/{room_id}')
+def update_room(
+        room_id: int,
+        payload: RoomBaseSchema,
+        service: RoomService = Depends(get_room_service)
+):
+    try:
+        updated_room = service.update_room(room_id, payload)
+        return {"status": "success", "room": updated_room}
+    except IntegrityError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Data integrity error. Check your input."
+        )
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred."
+        )
+
+
+@router.delete('/room/{room_id}')
+def delete_room(
+        room_id: int,
+        service: RoomService = Depends(get_room_service)
+):
+    try:
+        service.delete_room(room_id)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred."
+        )

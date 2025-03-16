@@ -1,98 +1,97 @@
-from datetime import datetime
-
 from fastapi import Depends, HTTPException, status, APIRouter, Response
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
 
-from .. import models, schemas
-from ..database import get_db
+from app.dependencies.session_dependencies import get_session_service
+from ..schemas.session_schema import SessionBaseSchema
+from ..service.session_service import SessionService
 
 router = APIRouter()
 
 
-@router.get('/session')
-def get_sessions(db: Session = Depends(get_db)):
+@router.get('/session/all')
+def get_sessions(service: SessionService = Depends(get_session_service)):
     try:
-        sessions = db.query(models.Session).all()
+        sessions = service.get_all_sessions()
         return {'status': 'success', 'results': len(sessions), 'sessions': sessions}
     except Exception as e:
-        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred. {e}"
+            detail="An unexpected error occurred."
         )
+
 
 @router.post('/session', status_code=status.HTTP_201_CREATED)
-def create_session(payload: schemas.SessionBaseSchema, db: Session = Depends(get_db)):
-    new_session = models.Session(**payload.model_dump())
+def create_session(
+        payload: SessionBaseSchema,
+        service: SessionService = Depends(get_session_service)
+):
     try:
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        new_session.create_at = now
-        new_session.update_at = now
-        db.add(new_session)
-        db.commit()
-        db.refresh(new_session)
+        new_session = service.create_session(payload)
         return {"status": "success", "session": new_session}
     except IntegrityError:
-        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="A database integrity error occurred. Please verify your data."
+            detail="Data integrity error. Check your input."
         )
     except Exception as e:
-        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred. {e}"
+            detail="An unexpected error occurred."
         )
 
 
-@router.get('/session')
-def get_session(id: int, db: Session = Depends(get_db)):
-    session = db.query(models.Session).filter(models.Session.id == id).first()
-    if not session:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"No session with this id: {id} found")
-    return {"status": "success", "session": session}
-
-
-@router.patch('/session')
-def update_session(id: int, payload: schemas.SessionBaseSchema, db: Session = Depends(get_db)):
-    session_query = db.query(models.Session).filter(models.Session.id == id)
-    db_session = session_query.first()
-
-    if not db_session:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'No session with this id: {id} found')
-    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    db_session.update_at = now
-    update_data = payload.model_dump(exclude_unset=True)
-    session_query.update(update_data, synchronize_session=False)
+@router.get('/session/{session_id}')
+def get_session(
+        session_id: int,
+        service: SessionService = Depends(get_session_service)
+):
     try:
-        db.commit()
-        db.refresh(db_session)
-        return {"status": "success", "session": db_session}
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="A database integrity error occurred. Please verify your data."
-        )
+        session = service.get_session_by_id(session_id)
+        return {"status": "success", "session": session}
+    except HTTPException as e:
+        raise e
     except Exception as e:
-        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred. {e}"
+            detail="An unexpected error occurred."
         )
 
 
-@router.delete('/session')
-def delete_session(id: int, db: Session = Depends(get_db)):
-    session_query = db.query(models.Session).filter(models.Session.id == id)
-    session = session_query.first()
-    if not session:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'No session with this id: {id} found')
-    session_query.delete(synchronize_session=False)
-    db.commit()
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+@router.patch('/session/{session_id}')
+def update_session(
+        session_id: int,
+        payload: SessionBaseSchema,
+        service: SessionService = Depends(get_session_service)
+):
+    try:
+        updated_session = service.update_session(session_id, payload)
+        return {"status": "success", "session": updated_session}
+    except IntegrityError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Data integrity error. Check your input."
+        )
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred."
+        )
+
+
+@router.delete('/session/{session_id}')
+def delete_session(
+        session_id: int,
+        service: SessionService = Depends(get_session_service)
+):
+    try:
+        service.delete_session(session_id)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred."
+        )

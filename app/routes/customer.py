@@ -1,225 +1,114 @@
-import base64
-from datetime import timedelta
 from uuid import UUID
 
-import bcrypt
-from fastapi import Depends, HTTPException, status, APIRouter, Response
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 
-from app.AuthModel import AuthModel
-from .. import models, schemas
-from ..config import settings
-from ..database import get_db
-from ..security import create_access_token
+from app.dependencies.customer_dependencies import get_customer_service
+from app.models.auth_model import AuthModel
+from app.schemas.customer_image_schema import CustomerImageSchema
+from app.schemas.customer_schema import CustomerBaseSchema
+from app.schemas.reset_password_schema import ResetPasswordSchema
+from app.service.customer_service import CustomerService
 
 router = APIRouter()
 
+
 @router.post('/customer/image', status_code=status.HTTP_200_OK)
-def upload_customer_image(payload: schemas.CustomerImageSchema, db: Session = Depends(get_db)):
+def upload_customer_image(
+        payload: CustomerImageSchema,
+        service: CustomerService = Depends(get_customer_service)
+):
     try:
-        customer_uuid = UUID(payload.customer_id)
-    except ValueError:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="customer_id inválido."
-        )
-
-    customer = db.query(models.Customer).filter(models.Customer.id == customer_uuid).first()
-    if not customer:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Customer com id {payload.customer_id} não encontrado."
-        )
-
-    try:
-        image_str = payload.image_data
-        if image_str.startswith("data:"):
-            _, image_data = image_str.split(",", 1)
-        else:
-            image_data = image_str
-
-        decoded_image = base64.b64decode(image_data)
-
-        new_image = models.CustomerImage(customer_id=customer_uuid, image_data=decoded_image)
-        db.add(new_image)
-        db.commit()
-        db.refresh(new_image)
-
+        image = service.upload_image(payload)
         return {
             "status": "success",
-            "message": "Imagem carregada com sucesso.",
-            "image_id": new_image.id,
+            "message": "Image has been uploaded successfully",
+            "image_id": image.id,
             "customer_id": payload.customer_id
         }
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Erro ao processar a imagem: {e}"
-        )
+    except HTTPException as e:
+        raise e
 
 
 @router.get('/customer/{customer_id}/image', response_class=Response)
-def get_customer_image(customer_id: UUID, db: Session = Depends(get_db)):
-
-    customer_image = db.query(models.CustomerImage).filter(models.CustomerImage.customer_id == customer_id).first()
-
-    if not customer_image:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Imagem para o customer com id {customer_id} não encontrada."
-        )
-
-    return Response(content=customer_image.image_data, media_type="image/jpeg")
-
+def get_customer_image(
+        customer_id: UUID,
+        service: CustomerService = Depends(get_customer_service)
+):
+    try:
+        image_data = service.get_customer_image(customer_id)
+        return Response(content=image_data, media_type="image/jpeg")
+    except HTTPException as e:
+        raise e
 
 
 @router.get('/customer/all')
-def get_customers(db: Session = Depends(get_db)):
-    try:
-        customers = db.query(models.Customer).all()
-        return {'status': 'success', 'results': len(customers), 'customers': customers}
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred. {e}"
-        )
+def get_customers(service: CustomerService = Depends(get_customer_service)):
+    return {'status': 'success', 'customers': service.get_all_customers()}
+
 
 @router.post('/customer', status_code=status.HTTP_201_CREATED)
-def create_customer(payload: schemas.CustomerBaseSchema, db: Session = Depends(get_db)):
-    hashed_password = bcrypt.hashpw(payload.password.encode('utf-8'), bcrypt.gensalt())
-    payload.password = hashed_password.decode('utf-8')
-
-    new_customer = models.Customer(**payload.model_dump())
-    try:
-        db.add(new_customer)
-        db.commit()
-        db.refresh(new_customer)
-
-        access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-        access_token = create_access_token(
-            data={"sub": new_customer.email, "id": str(new_customer.id)},
-            expires_delta=access_token_expires
-        )
-
-        return {
-            "status": "success",
-            "customer": new_customer,
-            "access_token": access_token,
-            "token_type": "bearer"
-        }
-
-        return {"status": "success", "customer": new_customer}
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="A database integrity error occurred. Please verify your data."
-        )
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred. {e}"
-        )
+def create_customer(
+        payload: CustomerBaseSchema,
+        service: CustomerService = Depends(get_customer_service)
+):
+    result = service.create_customer(payload)
+    return {
+        "status": "success",
+        "customer": result["customer"],
+        "access_token": result["access_token"],
+        "token_type": "bearer"
+    }
 
 
-@router.get('/customer')
-def get_customer(id: UUID, db: Session = Depends(get_db)):
-    customer = db.query(models.Customer).filter(models.Customer.id == id).first()
-    if not customer:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"No customer with this id: {id} found")
-    return {"status": "success", "customer": customer}
+@router.get('/customer/{customer_id}')
+def get_customer(
+        customer_id: UUID,
+        service: CustomerService = Depends(get_customer_service)
+):
+    return {"status": "success", "customer": service.get_customer_by_id(customer_id)}
 
 
-@router.get('/customer/email')
-def get_customer(email: str, db: Session = Depends(get_db)):
-    customer = db.query(models.Customer).filter(models.Customer.email == email).first()
-    if not customer:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"No customer with this email: {email} found")
-    return {"status": "success", "customer": customer}
+@router.get('/customer/email/{customer_email}')
+def get_customer_by_email(
+        customer_email: str,
+        service: CustomerService = Depends(get_customer_service)
+):
+    return {"status": "success", "customer": service.get_customer_by_email(customer_email)}
 
 
-@router.patch('/customer')
-def update_customer(id: UUID, payload: schemas.CustomerBaseSchema, db: Session = Depends(get_db)):
-    customer_query = db.query(models.Customer).filter(models.Customer.id == id)
-    db_customer = customer_query.first()
-
-    if not db_customer:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'No customer with this id: {id} found')
-    update_data = payload.model_dump(exclude_unset=True)
-    customer_query.update(update_data, synchronize_session=False)
-    try:
-        db.commit()
-        db.refresh(db_customer)
-        return {"status": "success", "customer": db_customer}
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="A database integrity error occurred. Please verify your data."
-        )
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred. {e}"
-        )
+@router.patch('/customer/{customer_id}')
+def update_customer(
+        customer_id: UUID,
+        payload: CustomerBaseSchema,
+        service: CustomerService = Depends(get_customer_service)
+):
+    return {"status": "success", "customer": service.update_customer(customer_id, payload)}
 
 
 @router.patch('/customer/reset-password')
-def reset_password(payload: schemas.ResetPasswordSchema, db: Session = Depends(get_db)):
-    customer = db.query(models.Customer).filter(models.Customer.email == payload.email).first()
-
-    if not customer:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
-
-    hashed_password = bcrypt.hashpw(payload.new_password.encode('utf-8'), bcrypt.gensalt())
-    customer.password = hashed_password.decode('utf-8')
-
-    db.commit()
-    db.refresh(customer)
-
-    return {"status": "success", "message": "Password updated successfully"}
+def reset_password(
+        payload: ResetPasswordSchema,
+        service: CustomerService = Depends(get_customer_service)
+):
+    service.reset_password(payload)
+    return {"status": "success", "message": "Senha atualizada com sucesso"}
 
 
-
-@router.delete('/customer')
-def delete_customer(id: UUID, db: Session = Depends(get_db)):
-    customer_query = db.query(models.Customer).filter(models.Customer.id == id)
-    customer = customer_query.first()
-    if not customer:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'No customer with this id: {id} found')
-    customer_query.delete(synchronize_session=False)
-    db.commit()
+@router.delete('/customer/{customer_id}')
+def delete_customer(
+        customer_id: UUID,
+        service: CustomerService = Depends(get_customer_service)
+):
+    service.delete_customer(customer_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.post('/customer/auth')
 def auth_customer(
-    payload: AuthModel,
-    db: Session = Depends(get_db),
-    response: Response = None
+        payload: AuthModel,
+        service: CustomerService = Depends(get_customer_service),
+        response: Response = None
 ):
-    customer = db.query(models.Customer).filter(models.Customer.email == payload.email).first()
-    if not customer or not bcrypt.checkpw(payload.password.encode('utf-8'), customer.password.encode('utf-8')):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials"
-        )
-
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": customer.email, "id": str(customer.id)},
-        expires_delta=access_token_expires
-    )
-
-    response.headers["Authorization"] = f"Bearer {access_token}"
-
-    return {"access_token": access_token, "token_type": "bearer"}
+    token = service.authenticate_customer(payload)
+    response.headers["Authorization"] = f"Bearer {token}"
+    return {"access_token": token, "token_type": "bearer"}

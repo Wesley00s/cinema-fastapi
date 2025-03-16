@@ -25,14 +25,29 @@ class RoomService:
         return room
 
     def create_room(self, room_data: RoomBaseSchema) -> RoomModel:
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        now = datetime.now()
         room_dict = room_data.model_dump()
         room_dict.update({
             "create_at": now,
             "update_at": now,
         })
+
         new_room = RoomModel(**room_dict)
-        return self.repository.create(new_room)
+
+        try:
+            self.repository.create(new_room)
+            self.repository.create_seats_for_room(new_room)
+            self.repository.db.commit()
+            self.repository.db.refresh(new_room)
+
+            return new_room
+
+        except Exception as e:
+            self.repository.db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Error creating room: {str(e)}"
+            )
 
     def update_room(self, room_id: int, room_data: RoomBaseSchema) -> RoomModel:
         room = self.repository.get_by_id(room_id)

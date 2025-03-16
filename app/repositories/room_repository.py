@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.models.room_model import RoomModel
+from app.models.seat_model import SeatModel
 
 
 class RoomRepository:
@@ -19,6 +20,19 @@ class RoomRepository:
             self.db.commit()
             self.db.refresh(room)
             return room
+        except Exception as e:
+            self.db.rollback()
+            raise e
+
+    def create_seats_for_room(self, room: RoomModel):
+        try:
+            for seat_number in range(1, room.capacity + 1):
+                seat = SeatModel(
+                    seat_number=seat_number,
+                    room_id=room.id,
+                    is_available=True
+                )
+                self.db.add(seat)
         except Exception as e:
             self.db.rollback()
             raise e

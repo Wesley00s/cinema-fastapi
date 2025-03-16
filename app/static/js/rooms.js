@@ -119,7 +119,7 @@ editRoomForm.addEventListener('submit', async function (event) {
     const roomId = document.getElementById('room_id_edited').value;
 
     const roomData = {
-        number: document.getElementById('number_edited').value ,
+        number: document.getElementById('number_edited').value,
         capacity: document.getElementById('capacity_edited').value,
 
     };

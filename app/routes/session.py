@@ -16,7 +16,7 @@ def get_sessions(service: SessionService = Depends(get_session_service)):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An unexpected error occurred."
+            detail=f'An unexpected error occurred. {e}'
         )
 
 
@@ -36,7 +36,7 @@ def create_session(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An unexpected error occurred."
+            detail=f'An unexpected error occurred. {e}'
         )
 
 
@@ -53,7 +53,7 @@ def get_session(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An unexpected error occurred."
+            detail=f'An unexpected error occurred. {e}'
         )
 
 
@@ -76,7 +76,7 @@ def update_session(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An unexpected error occurred."
+            detail=f'An unexpected error occurred. {e}'
         )
 
 
@@ -93,5 +93,5 @@ def delete_session(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An unexpected error occurred."
+            detail=f'An unexpected error occurred. {e}'
         )

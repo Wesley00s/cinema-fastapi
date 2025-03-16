@@ -1,12 +1,12 @@
 from fastapi import FastAPI
 
-from .admin import router as admin_router
-from .customer import router as customer_router
-from .movie import router as movie_router
-from .room import router as room_router
-from .seat import router as seat_router
-from .session import router as session_router
-from .ticket import router as ticket_router
+from app.routes.admin import router as admin_router
+from app.routes.customer import router as customer_router
+from app.routes.movie import router as movie_router
+from app.routes.room import router as room_router
+from app.routes.seat import router as seat_router
+from app.routes.session import router as session_router
+from app.routes.ticket import router as ticket_router
 
 
 def init_routers(app: FastAPI):

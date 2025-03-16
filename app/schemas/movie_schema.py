@@ -3,10 +3,12 @@ from typing import List
 
 from pydantic import BaseModel
 
+from app.models.MovieGenre import MovieGenre
+
 
 class MovieBaseSchema(BaseModel):
     title: str | None = None
-    genre: str | None = None
+    genre: MovieGenre | None = None
     synopsis: str | None = None
     duration: int | None = None
     age_rating: int | None = None
@@ -18,6 +20,7 @@ class MovieBaseSchema(BaseModel):
     class Config:
         from_attributes = True
         populate_by_name = True
+        use_enum_values = True
         arbitrary_types_allowed = True
 
 

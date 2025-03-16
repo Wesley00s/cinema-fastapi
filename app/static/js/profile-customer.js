@@ -5,7 +5,7 @@ document.querySelector('.logout-btn').addEventListener('click', () => {
 async function loadProfileData() {
     const email = localStorage.getItem('email');
     try {
-        const response = await fetch(`/customer/email?email=${email}`, {
+        const response = await fetch(`/customer/email/${email}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('access_token')}`

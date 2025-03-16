@@ -29,7 +29,7 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
             const fileInput = document.getElementById('photo');
             if (fileInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = async function(e) {
+                reader.onload = async function (e) {
                     const imageData = e.target.result;
 
                     const imagePayload = {
@@ -66,13 +66,13 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
     }
 });
 
-document.getElementById('photo').addEventListener('change', function() {
+document.getElementById('photo').addEventListener('change', function () {
     const preview = document.getElementById('preview-image');
     const file = this.files[0];
 
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             preview.src = e.target.result;
             preview.style.display = 'block';
             document.getElementById('photo-preview').style.display = 'block';

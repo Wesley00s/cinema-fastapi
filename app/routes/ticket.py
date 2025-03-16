@@ -1,99 +1,97 @@
-from datetime import datetime
-
 from fastapi import Depends, HTTPException, status, APIRouter, Response
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
 
-from .. import models, schemas
-from ..database import get_db
+from app.dependencies.ticket_dependencies import get_ticket_service
+from ..schemas.ticket_schema import TicketBaseSchema
+from ..service.ticket_service import TicketService
 
 router = APIRouter()
 
 
-
 @router.get('/ticket/all')
-def get_tickets(db: Session = Depends(get_db)):
+def get_tickets(service: TicketService = Depends(get_ticket_service)):
     try:
-        tickets = db.query(models.Ticket).all()
+        tickets = service.get_all_tickets()
         return {'status': 'success', 'results': len(tickets), 'tickets': tickets}
     except Exception as e:
-        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred. {e}"
+            detail="An unexpected error occurred."
         )
+
 
 @router.post('/ticket', status_code=status.HTTP_201_CREATED)
-def create_ticket(payload: schemas.TicketBaseSchema, db: Session = Depends(get_db)):
-    new_ticket = models.Ticket(**payload.model_dump())
+def create_ticket(
+        payload: TicketBaseSchema,
+        service: TicketService = Depends(get_ticket_service)
+):
     try:
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        new_ticket.create_at = now
-        new_ticket.update_at = now
-        db.add(new_ticket)
-        db.commit()
-        db.refresh(new_ticket)
+        new_ticket = service.create_ticket(payload)
         return {"status": "success", "ticket": new_ticket}
     except IntegrityError:
-        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="A database integrity error occurred. Please verify your data."
+            detail="Data integrity error. Check your input."
         )
     except Exception as e:
-        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred. {e}"
+            detail="An unexpected error occurred."
         )
 
 
-@router.get('/ticket/')
-def get_ticket(id: int, db: Session = Depends(get_db)):
-    ticket = db.query(models.Ticket).filter(models.Ticket.id == id).first()
-    if not ticket:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"No ticket with this id: {id} found")
-    return {"status": "success", "ticket": ticket}
-
-
-@router.patch('/ticket/')
-def update_ticket(id: int, payload: schemas.TicketBaseSchema, db: Session = Depends(get_db)):
-    ticket_query = db.query(models.Ticket).filter(models.Ticket.id == id)
-    db_ticket = ticket_query.first()
-
-    if not db_ticket:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'No ticket with this id: {id} found')
-    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    db_ticket.update_at = now
-    update_data = payload.model_dump(exclude_unset=True)
-    ticket_query.update(update_data, synchronize_session=False)
+@router.get('/ticket/{ticket_id}')
+def get_ticket(
+        ticket_id: int,
+        service: TicketService = Depends(get_ticket_service)
+):
     try:
-        db.commit()
-        db.refresh(db_ticket)
-        return {"status": "success", "ticket": db_ticket}
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="A database integrity error occurred. Please verify your data."
-        )
+        ticket = service.get_ticket_by_id(ticket_id)
+        return {"status": "success", "ticket": ticket}
+    except HTTPException as e:
+        raise e
     except Exception as e:
-        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred. {e}"
+            detail="An unexpected error occurred."
         )
 
 
-@router.delete('/ticket/')
-def delete_ticket(id: int, db: Session = Depends(get_db)):
-    ticket_query = db.query(models.Ticket).filter(models.Ticket.id == id)
-    ticket = ticket_query.first()
-    if not ticket:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'No ticket with this id: {id} found')
-    ticket_query.delete(synchronize_session=False)
-    db.commit()
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+@router.patch('/ticket/{ticket_id}')
+def update_ticket(
+        ticket_id: int,
+        payload: TicketBaseSchema,
+        service: TicketService = Depends(get_ticket_service)
+):
+    try:
+        updated_ticket = service.update_ticket(ticket_id, payload)
+        return {"status": "success", "ticket": updated_ticket}
+    except IntegrityError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Data integrity error. Check your input."
+        )
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred."
+        )
+
+
+@router.delete('/ticket/{ticket_id}')
+def delete_ticket(
+        ticket_id: int,
+        service: TicketService = Depends(get_ticket_service)
+):
+    try:
+        service.delete_ticket(ticket_id)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred."
+        )

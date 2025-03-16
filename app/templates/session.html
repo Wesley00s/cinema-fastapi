@@ -2,11 +2,11 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="../static/icons/favicon.png"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="../static/icons/favicon.png" rel="icon" type="image/png"/>
 
-    <link rel="stylesheet" href="../static/css/session.css">
+    <link href="../static/css/session.css" rel="stylesheet">
     <title>Gerenciar Sessões</title>
 </head>
 <body>
@@ -15,44 +15,44 @@
     <form id="sessionForm">
         <div class="form-group">
             <label for="movieId">ID do filme</label>
-            <input type="number" min="0" id="movieId" name="movieId" placeholder="Digite o ID do filme" required>
+            <input id="movieId" min="0" name="movieId" placeholder="Digite o ID do filme" required type="number">
         </div>
         <div class="form-group">
             <label for="roomNumber">Número da sala</label>
-            <input type="number" min="0" id="roomNumber" name="roomNumber" placeholder="Digite o número da sala"
-                   required>
+            <input id="roomNumber" min="0" name="roomNumber" placeholder="Digite o número da sala" required
+                   type="number">
         </div>
         <div class="form-group">
             <label for="startTime">Data e horário de inicio</label>
-            <input type="datetime-local" id="startTime" name="startTime" placeholder="Digite a data e horario de inicio"
-                   required>
+            <input id="startTime" name="startTime" placeholder="Digite a data e horario de inicio" required
+                   type="datetime-local">
         </div>
         <div class="form-group">
             <label for="endTime">Data e horário de término</label>
-            <input type="datetime-local" id="endTime" name="endTime" placeholder="Digite a data e horario de término"
-                   required>
+            <input id="endTime" name="endTime" placeholder="Digite a data e horario de término" required
+                   type="datetime-local">
         </div>
         <div class="form-group">
             <label for="sessionValue">Valor da sessão</label>
-            <input type="number" step="0.01" min="0" id="sessionValue" name="sessionValue"
-                   placeholder="Digite o valor da sessão" required>
+            <input id="sessionValue" min="0" name="sessionValue" placeholder="Digite o valor da sessão" required
+                   step="0.01" type="number">
         </div>
         <div class="form-group">
             <label for="language">Idioma do filme</label>
-            <input type="text" id="language" name="language" placeholder="Digite o idioma do filme" required>
+            <input id="language" name="language" placeholder="Digite o idioma do filme" required type="text">
         </div>
         <div class="form-group radio-group">
             <label>Legendado</label>
             <div class="radio-box">
-                <input type="radio" id="yes" name="subtitles" value="yes" required>
+                <input id="yes" name="subtitles" required type="radio" value="yes">
                 <label for="yes">Sim</label>
             </div>
             <div class="radio-box">
-                <input type="radio" id="no" name="subtitles" value="no" required>
+                <input id="no" name="subtitles" required type="radio" value="no">
                 <label for="no">Não</label>
             </div>
         </div>
-        <button type="submit" class="add-btn">Adicionar</button>
+        <button class="add-btn" type="submit">Adicionar</button>
 
     </form>
 
@@ -63,61 +63,61 @@
     </div>
 </div>
 
-<div id="edit-modal" class="modal hidden">
+<div class="modal hidden" id="edit-modal">
     <div class="modal-content">
         <h2>Editar Sala</h2>
         <form id="editSessionForm">
-            <input type="hidden" id="session_id_edited"/>
+            <input id="session_id_edited" type="hidden"/>
 
             <div class="form-group">
                 <label for="movieIdEdited">ID do filme</label>
-                <input type="number" min="0" id="movieIdEdited" name="movieIdEdited" placeholder="Digite o ID do filme"
-                       required>
+                <input id="movieIdEdited" min="0" name="movieIdEdited" placeholder="Digite o ID do filme" required
+                       type="number">
             </div>
             <div class="form-group">
                 <label for="roomNumberEdited">Número da sala</label>
-                <input type="number" min="0" id="roomNumberEdited" name="roomNumberEdited"
-                       placeholder="Digite o número da sala" required>
+                <input id="roomNumberEdited" min="0" name="roomNumberEdited" placeholder="Digite o número da sala"
+                       required type="number">
             </div>
             <div class="form-group">
                 <label for="startTimeEdited">Data e horário de inicio</label>
-                <input type="datetime-local" id="startTimeEdited" name="startTimeEdited"
-                       placeholder="Digite a data e horario de inicio" required>
+                <input id="startTimeEdited" name="startTimeEdited" placeholder="Digite a data e horario de inicio"
+                       required type="datetime-local">
             </div>
             <div class="form-group">
                 <label for="endTimeEdited">Data e horário de término</label>
-                <input type="datetime-local" id="endTimeEdited" name="endTimeEdited"
-                       placeholder="Digite a data e horario de término" required>
+                <input id="endTimeEdited" name="endTimeEdited" placeholder="Digite a data e horario de término"
+                       required type="datetime-local">
             </div>
             <div class="form-group">
                 <label for="sessionValueEdited">Valor da sessão</label>
-                <input type="number" step="0.01" min="0" id="sessionValueEdited" name="sessionValueEdited"
-                       placeholder="Digite o valor da sessão" required>
+                <input id="sessionValueEdited" min="0" name="sessionValueEdited" placeholder="Digite o valor da sessão" required
+                       step="0.01" type="number">
             </div>
             <div class="form-group">
                 <label for="languageEdited">Idioma do filme</label>
-                <input type="text" id="languageEdited" name="languageEdited" placeholder="Digite o idioma do filme"
-                       required>
+                <input id="languageEdited" name="languageEdited" placeholder="Digite o idioma do filme" required
+                       type="text">
             </div>
             <div class="form-group radio-group">
                 <label>Legendado</label>
                 <div class="radio-box">
-                    <input type="radio" id="yesEdited" name="subtitlesEdited" value="yes" required>
+                    <input id="yesEdited" name="subtitlesEdited" required type="radio" value="yes">
                     <label for="yesEdited">Sim</label>
                 </div>
                 <div class="radio-box">
-                    <input type="radio" id="noEdited" name="subtitlesEdited" value="no" required>
+                    <input id="noEdited" name="subtitlesEdited" required type="radio" value="no">
                     <label for="noEdited">Não</label>
                 </div>
             </div>
 
             <button type="submit">Salvar</button>
-            <button type="button" id="close-modal">Cancelar</button>
+            <button id="close-modal" type="button">Cancelar</button>
         </form>
     </div>
 </div>
 
-<div id="dialog-overlay" class="dialog-overlay hidden">
+<div class="dialog-overlay hidden" id="dialog-overlay">
     <div class="dialog-box">
         <p id="dialog-message">Você tem certeza que deseja excluir esta sessão?</p>
         <div class="dialog-actions">

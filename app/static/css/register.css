@@ -83,7 +83,7 @@ body {
     text-decoration: underline;
 }
 
-    .photo-input {
+.photo-input {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -119,6 +119,7 @@ body {
     width: 100%;
     gap: 10px;
 }
+
 .username .form-group {
     width: 50%;
 }
@@ -131,6 +132,7 @@ body {
     width: 100%;
     gap: 10px;
 }
+
 .city-state .form-group {
     width: 50%;
 }

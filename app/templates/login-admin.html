@@ -2,11 +2,11 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="../static/icons/favicon.png"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="../static/icons/favicon.png" rel="icon" type="image/png"/>
 
-    <link rel="stylesheet" href="../static/css/login.css">
+    <link href="../static/css/login.css" rel="stylesheet">
     <title>Login de Administrador</title>
 </head>
 <body>
@@ -15,17 +15,17 @@
     <form id="login-form">
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Digite seu email" required>
+            <input id="email" name="email" placeholder="Digite seu email" required type="email">
         </div>
         <div class="form-group">
             <label for="password">Senha</label>
-            <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+            <input id="password" name="password" placeholder="Digite sua senha" required type="password">
             <div class="div-forgot-password">
-                <a href="/recovery-password-admin" class="forgot-password">Esqueci minha senha</a>
+                <a class="forgot-password" href="/recovery-password-admin">Esqueci minha senha</a>
 
             </div>
         </div>
-        <button type="submit" class="login-btn">Entrar</button>
+        <button class="login-btn" type="submit">Entrar</button>
         <div class="register-link">
             <a href="/register-admin">Não tem uma conta? Cadastre-se</a>
         </div>

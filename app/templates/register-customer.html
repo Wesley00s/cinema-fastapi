@@ -2,78 +2,78 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="../static/icons/favicon.png"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="../static/icons/favicon.png" rel="icon" type="image/png"/>
 
-    <link rel="stylesheet" href="../static/css/register.css">
+    <link href="../static/css/register.css" rel="stylesheet">
     <title>Cadastro de Cliente</title>
 </head>
 <body>
 <div class="register-container">
     <h2>Cadastro de Cliente</h2>
 
-    <form id="register-form" enctype="multipart/form-data">
+    <form enctype="multipart/form-data" id="register-form">
         <div class="form-group">
             <label for="photo">Foto de Perfil</label>
-            <input type="file"
+            <input accept="image/*"
+                   class="photo-input"
                    id="photo"
                    name="photo"
-                   accept="image/*"
-                   class="photo-input">
+                   type="file">
             <small>Selecione uma imagem</small>
             <div class="photo-preview" id="photo-preview" style="display: none;">
-                <img id="preview-image" src="#" alt="Pré-visualização da Foto">
+                <img alt="Pré-visualização da Foto" id="preview-image" src="#">
             </div>
         </div>
         <div class="username">
             <div class="form-group">
                 <label for="first_name">Nome</label>
-                <input type="text" id="first_name" name="first_name" placeholder="Digite seu nome" required>
+                <input id="first_name" name="first_name" placeholder="Digite seu nome" required type="text">
             </div>
             <div class="form-group">
                 <label for="last_name">Sobrenome</label>
-                <input type="text" id="last_name" name="last_name" placeholder="Digite seu sobrenome" required>
+                <input id="last_name" name="last_name" placeholder="Digite seu sobrenome" required type="text">
             </div>
         </div>
         <div class="form-group">
             <label for="age">Idade</label>
-            <input type="number" id="age" name="age" placeholder="Digite sua idade" required>
+            <input id="age" name="age" placeholder="Digite sua idade" required type="number">
         </div>
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Digite seu email" required>
+            <input id="email" name="email" placeholder="Digite seu email" required type="email">
         </div>
         <div class="form-group">
             <label for="password">Senha</label>
-            <input type="password" id="password" name="password" placeholder="Crie uma senha" required>
+            <input id="password" name="password" placeholder="Crie uma senha" required type="password">
         </div>
         <div class="form-group">
             <label for="address">Endereço</label>
-            <input type="text" id="address" name="address" placeholder="Digite seu endereço" required>
+            <input id="address" name="address" placeholder="Digite seu endereço" required type="text">
         </div>
         <div class="city-state">
             <div class="form-group">
                 <label for="city">Cidade</label>
-                <input type="text" id="city" name="city" placeholder="Digite sua cidade" required>
+                <input id="city" name="city" placeholder="Digite sua cidade" required type="text">
             </div>
             <div class="form-group">
                 <label for="state">Estado</label>
-                <input type="text" id="state" name="state" placeholder="Digite seu estado" required>
+                <input id="state" name="state" placeholder="Digite seu estado" required type="text">
             </div>
         </div>
         <div class="cep-country">
             <div class="form-group">
                 <label for="zip_code">CEP</label>
-                <input type="text" id="zip_code" name="zip_code" placeholder="Digite seu CEP" required>
+                <input id="zip_code" name="zip_code" placeholder="Digite seu CEP" required type="text">
             </div>
             <div class="form-group">
                 <label for="country">País</label>
-                <input type="text" id="country" name="country" placeholder="Digite seu país" required>
+                <input id="country" name="country" placeholder="Digite seu país" required type="text">
             </div>
         </div>
 
-        <button type="submit" class="register-btn">Cadastrar</button>
+        <button class="register-btn" type="submit">Cadastrar</button>
         <div class="login-link">
             <a href="/login-customer">Já tem uma conta? Faça login</a>
         </div>

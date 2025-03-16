@@ -3,7 +3,7 @@ import uvicorn
 from app.core.app_config import get_application
 from app.core.init_pages import init_pages
 from app.database.init_models import init_database_models
-from app.routes.init_routers import init_routers
+from app.core.init_routers import init_routers
 
 init_database_models()
 app = get_application()

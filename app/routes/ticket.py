@@ -33,11 +33,6 @@ def create_ticket(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Data integrity error. Check your input."
         )
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f'An unexpected error occurred. {e}'
-        )
 
 
 @router.get('/ticket/{ticket_id}')
@@ -50,11 +45,6 @@ def get_ticket(
         return {"status": "success", "ticket": ticket}
     except HTTPException as e:
         raise e
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f'An unexpected error occurred. {e}'
-        )
 
 
 @router.patch('/ticket/{ticket_id}')
@@ -73,11 +63,6 @@ def update_ticket(
         )
     except HTTPException as e:
         raise e
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f'An unexpected error occurred. {e}'
-        )
 
 
 @router.delete('/ticket/{ticket_id}')
@@ -90,8 +75,3 @@ def delete_ticket(
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except HTTPException as e:
         raise e
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f'An unexpected error occurred. {e}'
-        )

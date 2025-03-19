@@ -51,13 +51,16 @@ def create_admin(
         payload: AdminBaseSchema,
         service: AdminService = Depends(get_admin_service)
 ):
-    result = service.create_admin(payload)
-    return {
-        "status": "success",
-        "admin": result["admin"],
-        "access_token": result["access_token"],
-        "token_type": "bearer"
-    }
+    try:
+        result = service.create_admin(payload)
+        return {
+            "status": "success",
+            "admin": result["admin"],
+            "access_token": result["access_token"],
+            "token_type": "bearer"
+        }
+    except HTTPException as e:
+        raise e
 
 
 @router.get('/admin/{admin_id}')
@@ -82,7 +85,11 @@ def update_admin(
         payload: AdminBaseSchema,
         service: AdminService = Depends(get_admin_service)
 ):
-    return {"status": "success", "admin": service.update_admin(admin_id, payload)}
+    try:
+        result = service.update_admin(admin_id, payload)
+        return {"status": "success", "admin": result}
+    except HTTPException as e:
+        raise e
 
 
 @router.patch('/admin/reset-password')
@@ -90,8 +97,13 @@ def reset_password(
         payload: ResetPasswordSchema,
         service: AdminService = Depends(get_admin_service)
 ):
-    service.reset_password(payload)
-    return {"status": "success", "message": "Senha atualizada com sucesso"}
+    try:
+        result = service.reset_password(payload)
+        return {
+            "status": "success",
+        }
+    except HTTPException as e:
+        raise e
 
 
 @router.delete('/admin/{admin_id}')
@@ -99,8 +111,13 @@ def delete_admin(
         admin_id: UUID,
         service: AdminService = Depends(get_admin_service)
 ):
-    service.delete_admin(admin_id)
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+    try:
+        result = service.delete_admin(admin_id)
+        return {
+            "status": "success",
+        }
+    except HTTPException as e:
+        raise e
 
 
 @router.post('/admin/auth')
@@ -109,6 +126,9 @@ def auth_admin(
         service: AdminService = Depends(get_admin_service),
         response: Response = None
 ):
-    token = service.authenticate_admin(payload)
-    response.headers["Authorization"] = f"Bearer {token}"
-    return {"access_token": token, "token_type": "bearer"}
+    try:
+        token = service.authenticate_admin(payload)
+        response.headers["Authorization"] = f"Bearer {token}"
+        return {"access_token": token, "token_type": "bearer"}
+    except HTTPException as e:
+        raise e

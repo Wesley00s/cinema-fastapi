@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from app.models.movie_images_model import MovieImagesModel
 from app.models.movie_model import MovieModel
 
 
@@ -44,3 +45,12 @@ class MovieRepository:
         except Exception as e:
             self.db.rollback()
             raise e
+
+    def create_movie_images(self, new_images: MovieImagesModel):
+        self.db.add(new_images)
+        self.db.commit()
+        self.db.refresh(new_images)
+        return new_images
+
+    def get_movie_images(self, movie_id: int):
+        return self.db.query(MovieImagesModel).filter(MovieImagesModel.movie_id == movie_id).first()

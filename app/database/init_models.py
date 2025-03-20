@@ -6,7 +6,7 @@ from app.models import (
     customer_model,
     customer_image_model,
     movie_model,
-    movie_image_model,
+    movie_images_model,
     room_model,
     seat_model,
     session_model,
@@ -21,7 +21,7 @@ def init_database_models():
     customer_model.UserModel.metadata.create_all(bind=engine)
     customer_image_model.CustomerImageModel.metadata.create_all(bind=engine)
     movie_model.Base.metadata.create_all(bind=engine)
-    movie_image_model.MovieImageModel.metadata.create_all(bind=engine)
+    movie_images_model.MovieImagesModel.metadata.create_all(bind=engine)
     room_model.Base.metadata.create_all(bind=engine)
     seat_model.Base.metadata.create_all(bind=engine)
     session_model.Base.metadata.create_all(bind=engine)

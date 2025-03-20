@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 
 from app.models.seat_model import SeatModel
-from app.models.seat_model import SeatModel
 
 
 class SeatRepository:

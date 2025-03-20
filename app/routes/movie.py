@@ -2,10 +2,52 @@ from fastapi import Depends, HTTPException, status, APIRouter, Response
 from sqlalchemy.exc import IntegrityError
 
 from app.dependencies.movie_dependencies import get_movie_service
+from ..schemas.movie_images_schema import MovieImagesSchema
 from ..schemas.movie_schema import MovieBaseSchema
 from ..service.movie_service import MovieService
 
 router = APIRouter()
+
+
+@router.post('/movie/image', status_code=status.HTTP_200_OK)
+def upload_movie_images(
+        payload: MovieImagesSchema,
+        service: MovieService = Depends(get_movie_service)
+):
+    try:
+        images = service.upload_images(payload)
+        return {
+            "status": "success",
+            "message": "Images has been uploaded successfully",
+            "image_id": images.id,
+            "movie_id": payload.movie_id
+        }
+    except HTTPException as e:
+        raise e
+
+
+@router.get('/movie/{movie_id}/images/poster', response_class=Response)
+def get_movie_image(
+        movie_id: int,
+        service: MovieService = Depends(get_movie_service)
+):
+    try:
+        images_data = service.get_movie_images(movie_id)
+        return Response(content=images_data.poster_image_data, media_type="image/jpeg")
+    except HTTPException as e:
+        raise e
+
+
+@router.get('/movie/{movie_id}/images/backdrop', response_class=Response)
+def get_movie_image(
+        movie_id: int,
+        service: MovieService = Depends(get_movie_service)
+):
+    try:
+        images_data = service.get_movie_images(movie_id)
+        return Response(content=images_data.backdrop_image_data, media_type="image/jpeg")
+    except HTTPException as e:
+        raise e
 
 
 @router.get('/movie/all')

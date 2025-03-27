@@ -55,7 +55,7 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
 
             localStorage.setItem('access_token', result.access_token);
             localStorage.setItem('email', result.customer.email);
-            window.location.href = '/home-customer';
+            window.location.href = '/';
         } else {
             const error = await response.json();
             alert('Erro no cadastro: ' + error.detail);

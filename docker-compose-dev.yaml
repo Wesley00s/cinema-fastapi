@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres
+    networks:
+      - cinema_net
+    container_name: postgres
+    ports:
+      - '5432:5432'
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    networks:
+      - cinema_net
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cinema_api
+    ports:
+      - '8000:8000'
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+
+volumes:
+  postgres-db:
+
+networks:
+  cinema_net:
+    driver: bridge

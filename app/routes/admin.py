@@ -79,6 +79,15 @@ def get_admin_by_email(
     return {"status": "success", "admin": service.get_admin_by_email(admin_email)}
 
 
+@router.patch('/admin/reset-password')
+def reset_password(
+        payload: ResetPasswordSchema,
+        service: AdminService = Depends(get_admin_service)
+):
+    service.reset_password(payload)
+    return {"status": "success", "message": "Senha atualizada com sucesso"}
+
+
 @router.patch('/admin/{admin_id}')
 def update_admin(
         admin_id: UUID,
@@ -88,20 +97,6 @@ def update_admin(
     try:
         result = service.update_admin(admin_id, payload)
         return {"status": "success", "admin": result}
-    except HTTPException as e:
-        raise e
-
-
-@router.patch('/admin/reset-password')
-def reset_password(
-        payload: ResetPasswordSchema,
-        service: AdminService = Depends(get_admin_service)
-):
-    try:
-        result = service.reset_password(payload)
-        return {
-            "status": "success",
-        }
     except HTTPException as e:
         raise e
 

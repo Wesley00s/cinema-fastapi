@@ -76,15 +76,6 @@ def get_customer_by_email(
     return {"status": "success", "customer": service.get_customer_by_email(customer_email)}
 
 
-@router.patch('/customer/{customer_id}')
-def update_customer(
-        customer_id: UUID,
-        payload: CustomerBaseSchema,
-        service: CustomerService = Depends(get_customer_service)
-):
-    return {"status": "success", "customer": service.update_customer(customer_id, payload)}
-
-
 @router.patch('/customer/reset-password')
 def reset_password(
         payload: ResetPasswordSchema,
@@ -92,6 +83,15 @@ def reset_password(
 ):
     service.reset_password(payload)
     return {"status": "success", "message": "Senha atualizada com sucesso"}
+
+
+@router.patch('/customer/{customer_id}')
+def update_customer(
+        customer_id: UUID,
+        payload: CustomerBaseSchema,
+        service: CustomerService = Depends(get_customer_service)
+):
+    return {"status": "success", "customer": service.update_customer(customer_id, payload)}
 
 
 @router.delete('/customer/{customer_id}')

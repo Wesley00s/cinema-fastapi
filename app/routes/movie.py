@@ -9,7 +9,7 @@ from ..service.movie_service import MovieService
 router = APIRouter()
 
 
-@router.post('/movie/image', status_code=status.HTTP_200_OK)
+@router.post('/movie/images', status_code=status.HTTP_200_OK)
 def upload_movie_images(
         payload: MovieImagesSchema,
         service: MovieService = Depends(get_movie_service)
@@ -26,7 +26,7 @@ def upload_movie_images(
         raise e
 
 
-@router.get('/movie/{movie_id}/images/poster', response_class=Response)
+@router.get('/movie/{movie_id}/image/poster', response_class=Response)
 def get_movie_image(
         movie_id: int,
         service: MovieService = Depends(get_movie_service)
@@ -38,7 +38,7 @@ def get_movie_image(
         raise e
 
 
-@router.get('/movie/{movie_id}/images/backdrop', response_class=Response)
+@router.get('/movie/{movie_id}/image/backdrop', response_class=Response)
 def get_movie_image(
         movie_id: int,
         service: MovieService = Depends(get_movie_service)

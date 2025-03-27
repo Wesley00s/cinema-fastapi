@@ -2,84 +2,206 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../static/icons/favicon.png" rel="icon" type="image/png"/>
-
-    <link href="../static/css/register.css" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <title>Cadastro de Cliente</title>
 </head>
-<body>
-<div class="register-container">
-    <h2>Cadastro de Cliente</h2>
+<body class="bg-stone-950 min-h-screen">
+    <main class="pt-32 pb-12 px-4 lg:px-8 max-w-3xl mx-auto">
+        <div class="bg-stone-900/90 border-2 border-stone-800 rounded-xl p-8 shadow-xl">
+            <h2 class="text-orange-300 text-3xl font-bold mb-8 text-center">Cadastro de Cliente</h2>
 
-    <form enctype="multipart/form-data" id="register-form">
-        <div class="form-group">
-            <label for="photo">Foto de Perfil</label>
-            <input accept="image/*"
-                   class="photo-input"
-                   id="photo"
-                   name="photo"
-                   type="file">
-            <small>Selecione uma imagem</small>
-            <div class="photo-preview" id="photo-preview" style="display: none;">
-                <img alt="Pré-visualização da Foto" id="preview-image" src="#">
-            </div>
-        </div>
-        <div class="username">
-            <div class="form-group">
-                <label for="first_name">Nome</label>
-                <input id="first_name" name="first_name" placeholder="Digite seu nome" required type="text">
-            </div>
-            <div class="form-group">
-                <label for="last_name">Sobrenome</label>
-                <input id="last_name" name="last_name" placeholder="Digite seu sobrenome" required type="text">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="age">Idade</label>
-            <input id="age" name="age" placeholder="Digite sua idade" required type="number">
-        </div>
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input id="email" name="email" placeholder="Digite seu email" required type="email">
-        </div>
-        <div class="form-group">
-            <label for="password">Senha</label>
-            <input id="password" name="password" placeholder="Crie uma senha" required type="password">
-        </div>
-        <div class="form-group">
-            <label for="address">Endereço</label>
-            <input id="address" name="address" placeholder="Digite seu endereço" required type="text">
-        </div>
-        <div class="city-state">
-            <div class="form-group">
-                <label for="city">Cidade</label>
-                <input id="city" name="city" placeholder="Digite sua cidade" required type="text">
-            </div>
-            <div class="form-group">
-                <label for="state">Estado</label>
-                <input id="state" name="state" placeholder="Digite seu estado" required type="text">
-            </div>
-        </div>
-        <div class="cep-country">
-            <div class="form-group">
-                <label for="zip_code">CEP</label>
-                <input id="zip_code" name="zip_code" placeholder="Digite seu CEP" required type="text">
-            </div>
-            <div class="form-group">
-                <label for="country">País</label>
-                <input id="country" name="country" placeholder="Digite seu país" required type="text">
-            </div>
-        </div>
+            <form id="register-form" class="space-y-6" enctype="multipart/form-data">
+                <div class="flex flex-col items-center gap-4 mb-8">
+                    <label class="text-orange-300 font-semibold cursor-pointer">
+                        <input
+                            type="file"
+                            id="photo"
+                            name="photo"
+                            accept="image/*"
+                            class="hidden"
+                        >
+                        <div class="bg-stone-800 p-4 rounded-lg hover:bg-stone-700 transition duration-300">
+                            <span class="text-red-100">Selecione uma foto de perfil (JPG, PNG)</span>
+                        </div>
+                    </label>
+                    <div id="photo-preview" class="hidden w-32 h-32 rounded-full border-2 border-orange-400 overflow-hidden">
+                        <img id="preview-image" alt="Pré-visualização" class="w-full h-full object-cover">
+                    </div>
+                </div>
 
-        <button class="register-btn" type="submit">Cadastrar</button>
-        <div class="login-link">
-            <a href="/login-customer">Já tem uma conta? Faça login</a>
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-2">
+                            <label for="first_name" class="text-orange-300 font-semibold">Nome</label>
+                            <input
+                                type="text"
+                                id="first_name"
+                                name="first_name"
+                                required
+                                placeholder="Digite seu nome"
+                                class="w-full bg-stone-800 border-2 border-stone-700 rounded-lg p-3 text-red-100
+                                       focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400
+                                       placeholder-stone-500 transition duration-300"
+                            >
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label for="last_name" class="text-orange-300 font-semibold">Sobrenome</label>
+                            <input
+                                type="text"
+                                id="last_name"
+                                name="last_name"
+                                required
+                                placeholder="Digite seu sobrenome"
+                                class="w-full bg-stone-800 border-2 border-stone-700 rounded-lg p-3 text-red-100
+                                       focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400
+                                       placeholder-stone-500 transition duration-300"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-2">
+                            <label for="email" class="text-orange-300 font-semibold">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                required
+                                placeholder="Digite seu email"
+                                class="w-full bg-stone-800 border-2 border-stone-700 rounded-lg p-3 text-red-100
+                                       focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400
+                                       placeholder-stone-500 transition duration-300"
+                            >
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label for="age" class="text-orange-300 font-semibold">Idade</label>
+                            <input
+                                type="number"
+                                id="age"
+                                name="age"
+                                required
+                                placeholder="Digite sua idade"
+                                class="w-full bg-stone-800 border-2 border-stone-700 rounded-lg p-3 text-red-100
+                                       focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400
+                                       placeholder-stone-500 transition duration-300"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div class="flex flex-col gap-2">
+                        <label for="password" class="text-orange-300 font-semibold">Senha</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            placeholder="Crie uma senha"
+                            class="w-full bg-stone-800 border-2 border-stone-700 rounded-lg p-3 text-red-100
+                                   focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400
+                                   placeholder-stone-500 transition duration-300"
+                        >
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="address" class="text-orange-300 font-semibold">Endereço</label>
+                        <input
+                            type="text"
+                            id="address"
+                            name="address"
+                            required
+                            placeholder="Digite seu endereço"
+                            class="w-full bg-stone-800 border-2 border-stone-700 rounded-lg p-3 text-red-100
+                                   focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400
+                                   placeholder-stone-500 transition duration-300"
+                        >
+                    </div>
+                </div>
+
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div class="flex flex-col gap-2">
+                        <label for="city" class="text-orange-300 font-semibold">Cidade</label>
+                        <input
+                            type="text"
+                            id="city"
+                            name="city"
+                            required
+                            placeholder="Digite sua cidade"
+                            class="w-full bg-stone-800 border-2 border-stone-700 rounded-lg p-3 text-red-100
+                                   focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400
+                                   placeholder-stone-500 transition duration-300"
+                        >
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="state" class="text-orange-300 font-semibold">Estado</label>
+                        <input
+                            type="text"
+                            id="state"
+                            name="state"
+                            required
+                            placeholder="Digite seu estado"
+                            class="w-full bg-stone-800 border-2 border-stone-700 rounded-lg p-3 text-red-100
+                                   focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400
+                                   placeholder-stone-500 transition duration-300"
+                        >
+                    </div>
+                </div>
+
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div class="flex flex-col gap-2">
+                        <label for="zip_code" class="text-orange-300 font-semibold">CEP</label>
+                        <input
+                            type="text"
+                            id="zip_code"
+                            name="zip_code"
+                            required
+                            placeholder="Digite seu CEP"
+                            class="w-full bg-stone-800 border-2 border-stone-700 rounded-lg p-3 text-red-100
+                                   focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400
+                                   placeholder-stone-500 transition duration-300"
+                        >
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="country" class="text-orange-300 font-semibold">País</label>
+                        <input
+                            type="text"
+                            id="country"
+                            name="country"
+                            required
+                            placeholder="Digite seu país"
+                            class="w-full bg-stone-800 border-2 border-stone-700 rounded-lg p-3 text-red-100
+                                   focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400
+                                   placeholder-stone-500 transition duration-300"
+                        >
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full bg-orange-400 hover:bg-orange-500 text-stone-900 font-bold py-3 px-6 rounded-lg
+                           transition duration-300 hover:scale-[1.02] mt-6"
+                >
+                    Cadastrar
+                </button>
+
+                <div class="text-center mt-4">
+                    <a href="/login-customer" class="text-red-100 hover:text-orange-300 transition duration-300">
+                        Já tem uma conta? <span class="font-semibold">Faça login</span>
+                    </a>
+                </div>
+            </form>
         </div>
-    </form>
-</div>
+    </main>
+
+    <script src="../static/js/register-customer.js"></script>
+    <script src="../static/js/index.js"></script>
 
 </body>
-<script src="../static/js/register-customer.js"></script>
 </html>

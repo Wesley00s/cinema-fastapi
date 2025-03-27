@@ -20,13 +20,13 @@ def get_seats(service: SeatService = Depends(get_seat_service)):
         )
 
 
-@router.get('/seat/{seat_id}')
+@router.get('/seat/{seat_number}')
 def get_seat(
-        seat_id: int,
+        seat_number: int,
         service: SeatService = Depends(get_seat_service)
 ):
     try:
-        seat = service.get_seat_by_id(seat_id)
+        seat = service.get_seat_by_number(seat_number)
         return {"status": "success", "seat": seat}
     except HTTPException as e:
         raise e
@@ -44,7 +44,7 @@ def get_seats_room(
 ):
     try:
         seats = service.get_seats_by_room_id(room_id)
-        return {"status": "success",'results': len(seats), "seats": seats}
+        return {"status": "success", 'results': len(seats), "seats": seats}
     except HTTPException as e:
         raise e
     except Exception as e:
@@ -54,14 +54,31 @@ def get_seats_room(
         )
 
 
-@router.patch('/seat/{seat_id}')
+@router.get("/seat/room-number/{room_number}")
+def get_seats_room_number(
+        room_number: int,
+        service: SeatService = Depends(get_seat_service)
+):
+    try:
+        seats = service.get_seats_by_room_number(room_number)
+        return {"status": "success", 'results': len(seats), "seats": seats}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f'An unexpected error occurred. {e}'
+        )
+
+
+@router.patch('/seat/{seat_number}')
 def update_seat(
-        seat_id: int,
+        seat_number: int,
         payload: SeatBaseSchema,
         service: SeatService = Depends(get_seat_service)
 ):
     try:
-        updated_seat = service.update_seat(seat_id, payload)
+        updated_seat = service.update_seat(seat_number, payload)
         return {"status": "success", "seat": updated_seat}
     except IntegrityError:
         raise HTTPException(
@@ -77,13 +94,13 @@ def update_seat(
         )
 
 
-@router.delete('/seat/{seat_id}')
+@router.delete('/seat/{seat_number}')
 def delete_seat(
-        seat_id: int,
+        seat_number: int,
         service: SeatService = Depends(get_seat_service)
 ):
     try:
-        service.delete_seat(seat_id)
+        service.delete_seat(seat_number)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except HTTPException as e:
         raise e

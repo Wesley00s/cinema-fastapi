@@ -1,4 +1,4 @@
-# Cinema FastAPI 5.0
+# Cinema FastAPI 6.0
 
 ## Sobre o Projeto
 

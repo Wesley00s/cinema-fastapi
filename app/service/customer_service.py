@@ -105,6 +105,6 @@ class CustomerService:
     def _generate_access_token(self, customer: CustomerModel):
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         return create_access_token(
-            data={"sub": customer.email, "id": str(customer.id)},
+            data={"sub": customer.email, "id": str(customer.id), "is_admin": False},
             expires_delta=access_token_expires
         )

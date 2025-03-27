@@ -1,11 +1,11 @@
-document.querySelector('.logout-btn').addEventListener('click', () => {
+document.querySelector('#exitBtn').addEventListener('click', () => {
     localStorage.clear();
 });
 
 async function loadProfileData() {
     const email = localStorage.getItem('email');
     try {
-        const response = await fetch(`/admin/email?email=${email}`, {
+        const response = await fetch(`/admin/email/${email}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
@@ -48,7 +48,7 @@ async function loadProfileData() {
             if (imageResponse.ok) {
                 const imageBlob = await imageResponse.blob();
                 const imageUrl = URL.createObjectURL(imageBlob);
-                document.getElementById('profile-photo').src = imageUrl;
+                document.getElementById('profilePhoto').src = imageUrl;
                 console.log(imageUrl);
             } else {
                 console.error('Erro ao carregar a imagem');

@@ -22,7 +22,7 @@ document.getElementById('login-form').addEventListener('submit', async function 
 
         if (response.ok) {
             localStorage.setItem('access_token', responseData.access_token);
-            window.location.href = '/home-customer';
+            window.location.href = '/';
 
         } else {
             if (response.status === 401) {

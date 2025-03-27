@@ -105,6 +105,6 @@ class AdminService:
     def _generate_access_token(self, admin: AdminModel):
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         return create_access_token(
-            data={"sub": admin.email, "id": str(admin.id)},
+            data={"sub": admin.email, "id": str(admin.id), "is_admin": True},
             expires_delta=access_token_expires
         )

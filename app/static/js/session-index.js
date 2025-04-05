@@ -21,9 +21,38 @@ const loadSessions = async () => {
         const firstSession = sessions[0];
         console.log(firstSession);
 
-        const movieResponse = await fetch(`/movie/${firstSession.movie_id}`);
-        const movieData = await movieResponse.json();
-        const movie = movieData.movie;
+
+        let movie;
+
+        try {
+            const movieResponse = await fetch(`/movie/${firstSession.movie_id}`);
+            const movieData = await movieResponse.json();
+            movie = movieData.movie;
+        } catch (error) {
+            console.log(error);
+        }
+        if (!movie) {
+            sessionHeader.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-16 px-4 text-center bg-stone-900/80 rounded-xl border-2 border-stone-700 backdrop-blur-sm max-w-2xl mx-auto my-8 mt-50">
+                    <div class="mb-6 text-orange-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    
+                    <h2 class="text-3xl font-bold text-red-100 mb-4 tracking-tight">
+                        Nenhuma Sessão Disponível
+                    </h2>
+                    
+                    <p class="text-stone-400 text-lg mb-8 max-w-md mx-auto leading-relaxed">
+                        No momento não há sessões disponível. Se você for um administrador, por favor, gerencie novas sessões.
+                    </p>
+            
+                </div>
+            `;
+            seeAllSessionsBtn.classList.add("invisible");
+            return;
+        }
 
         headerMovieTitle.innerHTML = movie.title;
         headerMovieSynopsis.innerHTML = movie.synopsis;

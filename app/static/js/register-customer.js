@@ -25,32 +25,36 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
 
         if (response.ok) {
             const result = await response.json();
-
             const fileInput = document.getElementById('photo');
+
             if (fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = async function (e) {
-                    const imageData = e.target.result;
+                const imageUpload = new Promise(async (resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = async function(e) {
+                        try {
+                            const imageResponse = await fetch('/customer/image', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    customer_id: result.customer.id,
+                                    image_data: e.target.result
+                                })
+                            });
 
-                    const imagePayload = {
-                        customer_id: result.customer.id,
-                        image_data: imageData
+                            if (!imageResponse.ok) {
+                                const error = await imageResponse.json();
+                                reject("Erro na imagem: " + error.detail);
+                            }
+                            resolve();
+                        } catch (error) {
+                            reject(error);
+                        }
                     };
+                    reader.onerror = () => reject("Erro ao ler arquivo");
+                    reader.readAsDataURL(fileInput.files[0]);
+                });
 
-                    const imageResponse = await fetch('/customer/image', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(imagePayload)
-                    });
-
-                    if (!imageResponse.ok) {
-                        const errorImg = await imageResponse.json();
-                        alert("Erro ao enviar imagem: " + errorImg.detail);
-                    }
-                };
-                reader.readAsDataURL(fileInput.files[0]);
+                await imageUpload;
             }
 
             localStorage.setItem('access_token', result.access_token);

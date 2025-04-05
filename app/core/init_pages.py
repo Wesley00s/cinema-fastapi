@@ -26,10 +26,6 @@ def init_pages(app: FastAPI):
     async def login(request: Request):
         return templates.TemplateResponse("login-customer.html", {"request": request})
 
-    @app.get('/register-admin', tags=['Page'], response_class=HTMLResponse)
-    async def register(request: Request):
-        return templates.TemplateResponse("register-admin.html", {"request": request})
-
     @app.get('/register-customer', tags=['Page'], response_class=HTMLResponse)
     async def register(request: Request):
         return templates.TemplateResponse("register-customer.html", {"request": request})

@@ -310,7 +310,91 @@ const populateRooms = async () => {
     }
 }
 
+
+const createAdmin = async () => {
+    const adminEmail = "admin@gmail.com";
+
+    const adminData = {
+        "email": adminEmail,
+        "password": "admin123",
+        "first_name": "Admin",
+        "last_name": "Joe",
+        "address": "Rua Principal, 123",
+        "city": "Cidade Alta",
+        "state": "Novo Vale",
+        "zip_code": "6598530",
+        "country": "Brasil"
+    }
+
+    try {
+        const adminResponse = await fetch(`/admin/email/${adminEmail}`);
+        if (adminResponse.ok) {
+            const data = await adminResponse.json();
+            console.log(`Admin "${data.admin.email}" já existe.`);
+            return;
+        }
+    } catch (error) {}
+
+    try {
+        const response = await fetch('/admin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(adminData)
+        });
+
+        const result = await response.json();
+        console.log(`Admin "${adminData.email}" criado com sucesso.`);
+
+       const imagePath = "/static/image/admin.png";
+        const imageResponse = await fetch(imagePath);
+        if (!imageResponse.ok) {
+            throw new Error('Falha ao buscar imagem do admin');
+        }
+
+        const imageBlob = await imageResponse.blob();
+
+        const readFileAsBase64 = (blob) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const base64 = e.target.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        };
+
+        const imageBase64 = await readFileAsBase64(imageBlob);
+
+        const imageUploadResponse = await fetch('/admin/image', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                admin_id: result.admin.id,
+                image_data: imageBase64
+            })
+        });
+
+        if (!imageUploadResponse.ok) {
+            const error = await imageUploadResponse.json();
+            console.error('Erro ao salvar imagem:', error.detail);
+            return;
+        }
+
+        console.log('Imagem do admin salva com sucesso!');
+
+    } catch (error) {
+        console.error('Erro:', error.message);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
-    await populateMovies()
-    await populateRooms()
+    await createAdmin();
+    await populateMovies();
+    await populateRooms();
 });

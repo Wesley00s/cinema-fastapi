@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey, UUID, LargeBinary
+from sqlalchemy.orm import relationship
 
 from app.database.database import Base
 
@@ -8,3 +9,5 @@ class AdminImageModel(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     admin_id = Column(UUID(as_uuid=True), ForeignKey('admin.id'), nullable=False)
     image_data = Column(LargeBinary, nullable=False)
+
+    admin = relationship("AdminModel", back_populates="image")
